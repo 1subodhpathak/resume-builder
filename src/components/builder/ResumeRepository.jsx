@@ -1648,7 +1648,7 @@ const ResumeRepository = ({
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
-                      {(record.exportReadinessHistory?.length > 0 || record.atsHistory?.length > 0) ? (
+                      {/* {(record.exportReadinessHistory?.length > 0 || record.atsHistory?.length > 0) ? (
                         <button
                           type="button"
                           onClick={() => setSelectedCompareRecord(record)}
@@ -1657,7 +1657,7 @@ const ResumeRepository = ({
                           <Sparkles size={15} />
                           Compare Versions
                         </button>
-                      ) : null}
+                      ) : null} */}
                       <button
                         type="button"
                         onClick={() => onOpenResume?.(record)}
