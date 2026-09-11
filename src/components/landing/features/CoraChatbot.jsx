@@ -270,12 +270,7 @@ const CoraChatbot = ({ onStart, onViewTemplates, onOpenRepository }) => {
     try {
       setAiAnswer(await askCora(question));
     } catch (error) {
-      const isMissingKey = String(error?.message || '').includes('VITE_OPENAI_API_KEY');
-      setAiError(
-        isMissingKey
-          ? 'Cora is not connected yet. Add VITE_OPENAI_API_KEY to your environment and restart the app.'
-          : 'Cora could not answer right now. Please try again.'
-      );
+      setAiError(error?.message || 'Cora could not answer right now. Please try again.');
     } finally {
       setIsThinking(false);
     }
