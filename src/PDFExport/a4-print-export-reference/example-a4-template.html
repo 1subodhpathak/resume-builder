@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A4 Template Example</title>
+    <link rel="stylesheet" href="./a4PreviewScale.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #f3f4f6;
+        font-family: Arial, sans-serif;
+      }
+
+      #cover-letter-preview {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0;
+        box-sizing: border-box;
+        background: #ffffff;
+        color: #111827;
+        padding: 18mm 16mm;
+        box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
+      }
+
+      .demo-header {
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid #d1d5db;
+      }
+
+      .demo-name {
+        margin: 0 0 4px;
+        font-size: 28px;
+        font-weight: 700;
+      }
+
+      .demo-meta {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.6;
+        color: #4b5563;
+      }
+
+      .demo-body {
+        font-size: 14px;
+        line-height: 1.8;
+      }
+
+      .demo-actions {
+        margin-top: 24px;
+      }
+
+      .demo-button {
+        border: 0;
+        background: #0f172a;
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="document-scale-frame">
+      <div class="document-scale-content">
+        <article id="cover-letter-preview" data-template="default-letter">
+          <header class="demo-header">
+            <h1 class="demo-name">Jordan Smith</h1>
+            <p class="demo-meta">
+              jordan@example.com | +1 555 222 1111 | San Francisco, CA
+            </p>
+          </header>
+
+          <div class="demo-body" data-editor-body="true" contenteditable="true">
+            <p>Dear Hiring Manager,</p>
+            <p>
+              I am excited to submit my application for the role. This example
+              demonstrates the kind of A4 HTML node that the export helper is
+              designed to print as a full-page PDF.
+            </p>
+            <p>
+              The important part is that this block is already rendered as a
+              real A4 layout in HTML before export begins.
+            </p>
+            <p>Sincerely,<br />Jordan Smith</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="demo-actions">
+      <button id="print-button" class="demo-button" type="button">
+        Print / Save PDF
+      </button>
+    </div>
+
+    <script type="module">
+      import { exportA4ElementToPdf } from './index.js';
+
+      document.getElementById('print-button').addEventListener('click', async () => {
+        const sourceElement = document.querySelector('#cover-letter-preview');
+
+        await exportA4ElementToPdf({
+          sourceElement,
+          filename: 'A4_Template_Example.pdf',
+          templateId: sourceElement?.getAttribute('data-template') || 'default-letter',
+        });
+      });
+    </script>
+  </body>
+  </html>
+

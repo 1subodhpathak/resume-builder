@@ -1,0 +1,76 @@
+/*
+ * Reference copy of the current A4 preview scaling system.
+ *
+ * This is not loaded by the application. It documents how the live editor
+ * shows a 210mm x 297mm page at responsive scaled sizes before export.
+ */
+
+.document-scale-frame {
+  --document-scale: 0.36;
+  --document-frame-width: 286px;
+  --document-frame-height: 404px;
+  position: relative;
+  width: var(--document-frame-width);
+  min-width: var(--document-frame-width);
+  height: var(--document-frame-height);
+  min-height: var(--document-frame-height);
+}
+
+.document-scale-content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 210mm;
+  min-height: 297mm;
+  transform: scale(var(--document-scale));
+  transform-origin: top left;
+}
+
+@media (min-width: 360px) {
+  .document-scale-frame {
+    --document-scale: 0.4;
+    --document-frame-width: 318px;
+    --document-frame-height: 449px;
+  }
+}
+
+@media (min-width: 390px) {
+  .document-scale-frame {
+    --document-scale: 0.45;
+    --document-frame-width: 357px;
+    --document-frame-height: 505px;
+  }
+}
+
+@media (min-width: 640px) {
+  .document-scale-frame {
+    --document-scale: 0.65;
+    --document-frame-width: 516px;
+    --document-frame-height: 730px;
+  }
+}
+
+@media (min-width: 768px) {
+  .document-scale-frame {
+    --document-scale: 0.8;
+    --document-frame-width: 635px;
+    --document-frame-height: 898px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .document-scale-frame {
+    --document-scale: 0.9;
+    --document-frame-width: 715px;
+    --document-frame-height: 1011px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .document-scale-frame {
+    --document-scale: 1;
+    --document-frame-width: 794px;
+    --document-frame-height: 1123px;
+  }
+}
+
