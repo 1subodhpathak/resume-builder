@@ -7,8 +7,8 @@ export const getSubscriptionStatus = async (clerkId, forceRefresh = false) => {
   if (!clerkId) {
     return {
       plan: 'free',
-      tokensRemaining: 10000,
-      lifetimeTokens: 10000,
+      tokensRemaining: 30000,
+      lifetimeTokens: 30000,
       status: 'active',
       isPaidPlan: false
     };
@@ -38,8 +38,8 @@ export const getSubscriptionStatus = async (clerkId, forceRefresh = false) => {
 
     cachedSubscription = {
       plan: data.plan || 'free',
-      tokensRemaining: typeof data.tokensRemaining === 'number' ? data.tokensRemaining : 10000,
-      lifetimeTokens: data.lifetimeTokens || data.tokensRemaining || 10000,
+      tokensRemaining: typeof data.tokensRemaining === 'number' ? data.tokensRemaining : 30000,
+      lifetimeTokens: data.lifetimeTokens || data.tokensRemaining || 30000,
       tokenRenewalDate: data.tokenRenewalDate,
       planExpiresAt: data.planExpiresAt,
       billingCycle: data.billingCycle || 'monthly',
@@ -52,8 +52,8 @@ export const getSubscriptionStatus = async (clerkId, forceRefresh = false) => {
     console.warn('[getSubscriptionStatus error]:', err.message);
     return cachedSubscription || {
       plan: 'free',
-      tokensRemaining: 10000,
-      lifetimeTokens: 10000,
+      tokensRemaining: 30000,
+      lifetimeTokens: 30000,
       status: 'active',
       isPaidPlan: false
     };
@@ -84,7 +84,7 @@ export const getSubscriptionLedger = async (clerkId) => {
   }
 };
 
-export const POINTS_PER_USD = 100000;
+export const POINTS_PER_USD = 20000;
 
 export const formatUsd = (value) => `$${(Number(value) || 0).toFixed(4)}`;
 

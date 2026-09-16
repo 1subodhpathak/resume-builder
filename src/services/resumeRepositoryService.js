@@ -38,8 +38,8 @@ const getStorageKey = () => {
   return uid ? `careersense_resume_repo_${uid}` : 'careersense_resume_repo_unauthenticated';
 };
 
-export const CAREER_POINTS_PER_USD = 50000;
-export const AI_TOKENS_PER_USD = 50000;
+export const CAREER_POINTS_PER_USD = 20000;
+export const AI_TOKENS_PER_USD = 20000;
 const MAX_STORED_UPLOADS = 20;
 const MAX_STORED_READINESS_SNAPSHOTS = 25;
 const MAX_STORED_ANALYTICS_ENTRIES = 500;
@@ -671,7 +671,7 @@ export const upsertProfileFromResume = (resumeData) => {
     profile: nextProfile,
   }).profile;
 
-  dispatchCloudSync(() => updateBackendProfile(nextProfile));
+  // Document-scoped: Keep parsed resume data isolated to the local document without overwriting master account profile
   return savedProfile;
 };
 

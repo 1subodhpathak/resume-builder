@@ -38,12 +38,14 @@ import {
   Trash2,
   Upload,
   UserRound,
+  ExternalLink,
   X,
   LayoutDashboard,
   LayoutTemplate,
   Gauge,
   Activity,
   Zap,
+  ArrowUpRight,
 } from 'lucide-react';
 import {
   deleteResumeRecord,
@@ -54,7 +56,6 @@ import {
   formatUsdAmount,
   listResumeRecords,
   updateResumeProfile,
-  upsertProfileFromResume,
 } from '../../services/resumeRepositoryService';
 import { getSubscriptionStatus, getSubscriptionLedger, isResumeBuilderLedgerService, POINTS_PER_USD, formatUsd } from '../../services/subscriptionService';
 import { getResumeInsights } from '../../utils/resumeInsights';
@@ -560,16 +561,17 @@ const LibrarySummaryCard = ({ icon: Icon, title, count, detail, active, onClick 
   </button>
 );
 
-const ProfileInput = ({ label, value, onChange, placeholder, type = 'text' }) => (
+const ProfileInput = ({ label, value, placeholder, type = 'text' }) => (
   <div className="space-y-1.5">
     <label className="block text-[11.5px] font-semibold text-[#40556D]">{label}</label>
 
     <input
       type={type}
       value={value || ''}
-      onChange={(event) => onChange(event.target.value)}
+      readOnly
+      disabled
       placeholder={placeholder}
-      className="min-h-10 w-full rounded-[0.72rem] border border-[#D6E0EA] bg-white px-3.5 text-[13px] font-medium text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-all placeholder:text-[#98A7B6] hover:border-[#C6D2DE] focus:border-[#C49A43] focus:ring-4 focus:ring-[#C49A43]/10"
+      className="min-h-10 w-full rounded-[0.72rem] border border-[#DCE4EC] bg-[#F8FAFC] px-3.5 text-[13px] font-medium text-[#475569] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none cursor-not-allowed select-none transition-all placeholder:text-[#98A7B6]"
     />
   </div>
 );
@@ -719,21 +721,6 @@ const ResumeRepository = ({
   }, [refreshRepository]);
 
 
-  const handleProfileFieldChange = (field, value) => {
-    setProfileDraft((previous) => ({
-      ...previous,
-      [field]: value,
-    }));
-
-    setSaveState('dirty');
-  };
-
-  const handleSaveProfile = () => {
-    updateResumeProfile(profileDraft);
-    setSaveState('saved');
-    refreshRepository();
-  };
-
   const handleDeleteResume = (resumeId) => {
     const confirmed = window.confirm('Delete this saved resume from My Repository?');
     if (!confirmed) return;
@@ -763,15 +750,6 @@ const ResumeRepository = ({
     () => getProfileCompleteness(profileDraft),
     [profileDraft]
   );
-
-  const handleUpdateProfileFromLatestResume = () => {
-    if (!latestUploadedResume?.resumeData) return;
-
-    const nextProfile = upsertProfileFromResume(latestUploadedResume.resumeData);
-    setProfileDraft(nextProfile);
-    setSaveState('saved');
-    refreshRepository();
-  };
 
   const recentActivity = useMemo(() => {
     const resumeActivity = resumeRecords.flatMap((record) => {
@@ -1095,14 +1073,14 @@ const ResumeRepository = ({
         <DashboardMetricCard
           icon={Zap}
           label="AI Tokens Remaining"
-          value={(subData?.tokensRemaining ?? 10000).toLocaleString()}
+          value={(subData?.tokensRemaining ?? 30000).toLocaleString()}
           hint="CareerSense Reverse Balance"
           accent="gold"
           visual={{
             type: 'progress',
             label: 'Token balance',
-            reference: `${(subData?.tokensRemaining ?? 10000).toLocaleString()}`,
-            percent: Math.min(100, Math.max(0, ((subData?.tokensRemaining ?? 10000) / 10000) * 100)),
+            reference: `${(subData?.tokensRemaining ?? 30000).toLocaleString()}`,
+            percent: Math.min(100, Math.max(0, ((subData?.tokensRemaining ?? 30000) / 30000) * 100)),
             caption: `${(subData?.plan || 'free').toUpperCase()} Plan Quota`,
             ariaLabel: 'AI Tokens remaining',
           }}
@@ -1436,70 +1414,38 @@ const ResumeRepository = ({
       <SectionCard
         eyebrow="My Profile"
         title="Profile Settings"
-        description="Manage the master profile CareerSense uses to speed up new resume generation."
+        description="Central master profile data synchronized from your CareerSense account."
         actions={
-          <button
-            type="button"
-            onClick={handleSaveProfile}
-            className="inline-flex items-center justify-center gap-2 rounded-[0.72rem] bg-[#123B6D] px-5 py-2.5 text-[12px] font-extrabold text-white shadow-[0_5px_14px_rgba(18,59,109,0.14)] transition-all hover:-translate-y-0.5 hover:bg-[#0D315D]"
+          <a
+            href="https://careersenseai.com/dashboard?tab=My+Profile"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-[0.72rem] bg-[#123B6D] px-5 py-2.5 text-[12px] font-extrabold text-white shadow-[0_5px_14px_rgba(18,59,109,0.14)] transition-all hover:-translate-y-0.5 hover:bg-[#0D315D] cursor-pointer"
           >
-            <Save size={16} />
-            {saveState === 'dirty' ? 'Save Profile' : 'Save Changes'}
-          </button>
+            <ExternalLink size={15} />
+            Edit Profile
+          </a>
         }
       >
         <div className="grid gap-6 md:grid-cols-2">
-          <ProfileInput label="Full Name" value={profileDraft.name} onChange={(value) => handleProfileFieldChange('name', value)} placeholder="Aanchal Agarwal" />
-          <ProfileInput label="Job Title" value={profileDraft.title} onChange={(value) => handleProfileFieldChange('title', value)} placeholder="Business Analyst" />
-          <ProfileInput label="Email" type="email" value={profileDraft.email} onChange={(value) => handleProfileFieldChange('email', value)} placeholder="name@email.com" />
-          <ProfileInput label="Phone" value={profileDraft.phone} onChange={(value) => handleProfileFieldChange('phone', value)} placeholder="+91 98765 43210" />
-          <ProfileInput label="Location" value={profileDraft.location} onChange={(value) => handleProfileFieldChange('location', value)} placeholder="Delhi, India" />
-          <ProfileInput label="LinkedIn" value={profileDraft.linkedin} onChange={(value) => handleProfileFieldChange('linkedin', value)} placeholder="linkedin.com/in/yourprofile" />
+          <ProfileInput label="Full Name" value={profileDraft.name || profileDraft.fullName} placeholder="Your Name" />
+          <ProfileInput label="Job Title" value={profileDraft.title} placeholder="Your Current Role" />
+          <ProfileInput label="Email" type="email" value={profileDraft.email} placeholder="name@email.com" />
+          <ProfileInput label="Phone" value={profileDraft.phone} placeholder="+91 98765 43210" />
+          <ProfileInput label="Location" value={profileDraft.location} placeholder="City, Country" />
+          <ProfileInput label="LinkedIn" value={profileDraft.linkedin} placeholder="linkedin.com/in/yourprofile" />
         </div>
 
         <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[#E1E7EF] pt-5 text-xs font-medium text-[#64748B]">
           <span className="rounded-full bg-[#E8EEF7] px-3 py-1.5 text-[#A87922] ring-1 ring-[#E3D1A4]/70">
-            Updated {formatDateTime(profileDraft.updatedAt)}
+            Synced from Central Profile
           </span>
 
           <span className="rounded-full bg-[#F8FAFC] px-3 py-1.5 text-[#64748B] ring-1 ring-[#E1E7EF]">
-            {profileDraft.photo ? 'Photo synced from resume' : 'Photo not added yet'}
+            {profileDraft.photo ? 'Photo linked from profile' : 'Photo not added yet'}
           </span>
         </div>
       </SectionCard>
-
-      <div className="rounded-[1rem] border border-[#DCE4EC] bg-white/96 p-4 shadow-[0_8px_24px_rgba(15,43,75,0.05)] backdrop-blur-xl">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#A87922]">
-              Data Management
-            </div>
-
-            <h3 className="mt-2 text-xl font-bold tracking-tight text-[#0F172A]">
-              Update from latest uploaded resume
-            </h3>
-
-            <p className="mt-1.5 text-[10px] font-medium text-[#718398]">
-              {latestUploadedResume
-                ? `Latest uploaded base: ${latestUploadedResume.title}`
-                : 'Upload or tailor a resume first, then use it to refresh your master profile.'}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleUpdateProfileFromLatestResume}
-            disabled={!latestUploadedResume}
-            className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all ${latestUploadedResume
-                ? 'bg-[#071426] text-white hover:shadow-[0_10px_24px_rgba(6,23,44,0.16)]'
-                : 'cursor-not-allowed border border-[#E1E7EF] bg-[#F8FAFC] text-[#94A3B8]'
-              }`}
-          >
-            <Upload size={16} />
-            Update Master Profile
-          </button>
-        </div>
-      </div>
     </div>
   );
 
@@ -1900,7 +1846,7 @@ const ResumeRepository = ({
   );
 
   const renderBillingSection = () => {
-    const tokensRemaining = subData?.tokensRemaining ?? 10000;
+    const tokensRemaining = subData?.tokensRemaining ?? 30000;
     const planName = (subData?.plan || 'free').toUpperCase();
 
     return (
@@ -1946,18 +1892,31 @@ const ResumeRepository = ({
               <p className="text-2xl font-extrabold tracking-tight text-[#173A62]">
                 {formatUsd(totalBillUsd)}
               </p>
-              <p className="mt-1 text-[11px] font-medium text-[#71849A]">Recorded Activity API Estimate</p>
+              <p className="mt-1 text-[11px] font-medium text-[#71849A]">Bills are managed by careersenseAi, you dont need to pay</p>
             </div>
 
-            <div className="rounded-2xl border border-[#DCE4EC] bg-[#F8FAFC] p-4 shadow-sm">
-              <div className="mb-3 flex items-center justify-between">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#A87922]">Active Operational Tier</p>
-                <span className="h-1.5 w-1.5 rounded-full bg-[#A87922]"></span>
+            <div className="relative flex flex-col justify-between rounded-2xl border border-[#DCE4EC] bg-[#F8FAFC] p-4 shadow-sm">
+              <div>
+                <div className="mb-3 flex items-center justify-between">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#A87922]">Active Operational Tier</p>
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#A87922]"></span>
+                </div>
+                <p className="text-2xl font-extrabold tracking-tight text-[#173A62]">
+                  {planName} Plan
+                </p>
+                <p className="mt-1 text-[11px] font-medium text-[#71849A]">CareerSense Subscription</p>
               </div>
-              <p className="text-2xl font-extrabold tracking-tight text-[#173A62]">
-                {planName} Plan
-              </p>
-              <p className="mt-1 text-[11px] font-medium text-[#71849A]">CareerSense Subscription</p>
+              <div className="mt-3 flex justify-end">
+                <a
+                  href="https://careersenseai.com/pricing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Upgrade Plan"
+                  className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#DCE4EC] bg-white text-[#173A62] shadow-xs transition-all duration-200 hover:scale-105 hover:border-[#173A62] hover:bg-[#173A62] hover:text-white"
+                >
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+              </div>
             </div>
           </div>
 

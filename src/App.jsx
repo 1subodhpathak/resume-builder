@@ -37,7 +37,6 @@ import {
 } from './services/groqService';
 import {
   saveUploadedResume,
-  upsertProfileFromResume,
   syncWithCloudBackend,
   getResumeRecord,
   saveResumeRecord,
@@ -342,7 +341,6 @@ const App = () => {
       }
 
       if (jsonData) {
-        upsertProfileFromResume(jsonData);
         setResumeData(jsonData);
         setCurrentJDText('');
         navigate('/review');
@@ -580,7 +578,6 @@ const App = () => {
                     onComplete={(finalTailoredJson, jdText, atsResult) => {
                       setResumeImportMode('ai-enhanced');
                       setSelectedMode('tailor');
-                      upsertProfileFromResume(finalTailoredJson);
                       setResumeData(finalTailoredJson);
                       setCurrentJDText(jdText || '');
 
@@ -645,7 +642,6 @@ const App = () => {
                   onHome={() => navigateToLandingSection('top')}
                   onOpenRepository={(tab) => openRepository('review', tab || 'dashboard')}
                   onComplete={(data) => {
-                    upsertProfileFromResume(data);
                     setResumeData(data);
                     const savedRecord = saveResumeRecord({
                       resumeId: activeResumeRecordId,

@@ -70,7 +70,7 @@ const Navbar = ({
   }, [refreshRepositoryStats]);
 
   const { user } = useUser();
-  const [subData, setSubData] = useState({ plan: 'free', tokensRemaining: 10000 });
+  const [subData, setSubData] = useState({ plan: 'free', tokensRemaining: 30000 });
   const [totalBillUsd, setTotalBillUsd] = useState(0);
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const Navbar = ({
         if (sub) {
           setSubData({
             plan: sub.plan || 'free',
-            tokensRemaining: sub.tokensRemaining ?? 10000,
+            tokensRemaining: sub.tokensRemaining ?? 30000,
           });
         }
       });
