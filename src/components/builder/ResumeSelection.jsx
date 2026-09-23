@@ -14,8 +14,8 @@ import {
   X,
 } from 'lucide-react';
 
-import resumeVideo from '../../assets/Resume.mp4';
-import resumeJdVideo from '../../assets/Resume&JD.mp4';
+const resumeVideo = 'https://d7exlrhix3get.cloudfront.net/Resume.mp4';
+const resumeJdVideo = 'https://d7exlrhix3get.cloudfront.net/Resume-JD.mp4';
 
 
 /* =========================================================
