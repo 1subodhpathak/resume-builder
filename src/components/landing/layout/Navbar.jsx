@@ -1,11 +1,55 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useUser, SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
-import { ArrowRight, Menu, X, Zap } from 'lucide-react';
+import { 
+  ArrowRight, 
+  Menu, 
+  X, 
+  Zap, 
+  ChevronDown, 
+  FileCheck, 
+  ScrollText, 
+  MessagesSquare, 
+  Award, 
+  ArrowUpRight 
+} from 'lucide-react';
 import { scrollToLandingSection } from '../utils/scrollToLandingSection';
 import { getRepositoryStats, getTokenUsageEntries, listResumeRecords } from '../../../services/resumeRepositoryService';
 import { getSubscriptionStatus, getSubscriptionLedger, calculateResumeBuilderUsage, formatUsd } from '../../../services/subscriptionService';
 import careerSenseLogo from '../../../assets/cs_logo.png';
 import CustomUserButton from '../../common/CustomUserButton';
+
+const careerSenseTools = [
+  {
+    name: 'ATS Score Checker',
+    desc: 'Analyze & optimize resume keyword match',
+    href: 'https://ats.careersenseai.com/',
+    icon: FileCheck,
+    badge: 'Popular',
+    color: 'text-blue-700 bg-blue-50 border-blue-100',
+  },
+  {
+    name: 'Cover Letter Builder',
+    desc: 'Generate tailored AI cover letters in seconds',
+    href: 'https://coverletter.careersenseai.com/',
+    icon: ScrollText,
+    badge: 'AI Powered',
+    color: 'text-violet-700 bg-violet-50 border-violet-100',
+  },
+  {
+    name: 'Interview Simulator',
+    desc: 'Practice realistic AI voice & chat interviews',
+    href: 'https://careersenseai.com/interview-simulator',
+    icon: MessagesSquare,
+    color: 'text-amber-700 bg-amber-50 border-amber-100',
+  },
+  {
+    name: 'Skill Certification',
+    desc: 'Validate skills & earn verifiable certificates',
+    href: 'https://certifi.careersenseai.com/',
+    icon: Award,
+    color: 'text-cyan-700 bg-cyan-50 border-cyan-100',
+  },
+];
 
 const Navbar = ({
   onOpenRepository,
@@ -13,6 +57,7 @@ const Navbar = ({
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const [repositoryStats, setRepositoryStats] = useState(() => getRepositoryStats());
 
   const formatNumber = (value) => new Intl.NumberFormat().format(Number(value || 0));
@@ -31,6 +76,7 @@ const Navbar = ({
 
   const handleNavClick = useCallback((action) => {
     setMobileMenuOpen(false);
+    setToolsOpen(false);
     action();
   }, []);
 
@@ -137,6 +183,93 @@ const Navbar = ({
 
         {/* Desktop Links */}
         <div className="hidden items-center gap-1 rounded-full px-1 text-sm font-semibold text-[#475569] lg:flex">
+          {/* CareerSense Tools Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setToolsOpen(true)}
+            onMouseLeave={() => setToolsOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setToolsOpen((prev) => !prev)}
+              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 transition-all duration-200 hover:bg-[#E8EEF7] hover:text-[#071426] ${
+                toolsOpen ? 'bg-[#E8EEF7] text-[#071426]' : ''
+              }`}
+            >
+              <span>CareerSense Tools</span>
+              <ChevronDown
+                size={14}
+                className={`transition-transform duration-200 ${toolsOpen ? 'rotate-180 text-[#071426]' : 'text-[#64748B]'}`}
+              />
+            </button>
+
+            {/* Dropdown Menu */}
+            {toolsOpen && (
+              <div className="absolute left-0 top-full z-50 w-[340px] pt-2">
+                <div className="overflow-hidden rounded-2xl border border-[#E1E7EF] bg-white p-2.5 shadow-[0_20px_50px_rgba(7,20,38,0.16)]">
+                  <div className="px-3 pb-2 pt-1 text-[10px] font-black uppercase tracking-[0.16em] text-[#9A7628]">
+                    CareerSense Platform Tools
+                  </div>
+                  <div className="space-y-1">
+                    {careerSenseTools.map((tool) => {
+                      const Icon = tool.icon;
+                      return (
+                        <a
+                          key={tool.name}
+                          href={tool.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setToolsOpen(false)}
+                          className="group flex items-center justify-between rounded-xl p-2.5 transition-all hover:bg-[#F8FAFC]"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span
+                              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${tool.color}`}
+                            >
+                              <Icon size={18} />
+                            </span>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-[#071426] group-hover:text-[#123B6D]">
+                                  {tool.name}
+                                </span>
+                                {tool.badge && (
+                                  <span className="rounded-full bg-[#FAF5E8] px-1.5 py-0.2 text-[9px] font-extrabold text-[#9A7628] border border-[#E9DCB8]">
+                                    {tool.badge}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[11px] font-medium text-[#64748B] line-clamp-1">
+                                {tool.desc}
+                              </p>
+                            </div>
+                          </div>
+                          <ArrowUpRight
+                            size={14}
+                            className="text-[#94A3B8] opacity-0 transition-all group-hover:opacity-100 group-hover:text-[#071426]"
+                          />
+                        </a>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-1.5 border-t border-[#E1E7EF] pt-2">
+                    <a
+                      href="https://careersenseai.com/#career-tools"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setToolsOpen(false)}
+                      className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-[#9A7628] hover:bg-[#FAF5E8] transition"
+                    >
+                      <span>Explore all career tools</span>
+                      <ArrowRight size={13} />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -228,6 +361,46 @@ const Navbar = ({
               </div>
             </div>
           </SignedIn>
+
+          {/* CareerSense Tools in Mobile Drawer */}
+          <div className="rounded-xl border border-[#E1E7EF] bg-[#F8FAFC] p-2.5">
+            <div className="px-2 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-[#9A7628]">
+              CareerSense Platform Tools
+            </div>
+            <div className="mt-1 space-y-1">
+              {careerSenseTools.map((tool) => {
+                const Icon = tool.icon;
+                return (
+                  <a
+                    key={tool.name}
+                    href={tool.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-bold text-[#071426] hover:bg-white transition"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <span className={`flex h-7 w-7 items-center justify-center rounded-lg border ${tool.color}`}>
+                        <Icon size={14} />
+                      </span>
+                      <span>{tool.name}</span>
+                    </span>
+                    <ArrowUpRight size={13} className="text-[#94A3B8]" />
+                  </a>
+                );
+              })}
+              <a
+                href="https://careersenseai.com/#career-tools"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between border-t border-[#E1E7EF] px-2.5 pt-2 text-[11px] font-bold text-[#9A7628]"
+              >
+                <span>Explore all career tools</span>
+                <ArrowRight size={12} />
+              </a>
+            </div>
+          </div>
 
           {navItems.map((item) => (
             <button
