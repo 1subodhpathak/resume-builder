@@ -9,22 +9,20 @@ import CustomUserButton from '../common/CustomUserButton';
 
 const StepPill = ({ step, index, state }) => (
   <div
-    className={`inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
-      state === 'current'
+    className={`inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${state === 'current'
         ? 'border-[#B9964A]/45 bg-[#E8EEF7] text-[#071426] shadow-sm'
         : state === 'done'
           ? 'border-[#E1E7EF] bg-white text-[#123B6D]'
           : 'border-[#E1E7EF] bg-[#F7F8FA] text-[#64748B]'
-    }`}
+      }`}
   >
     <span
-      className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
-        state === 'current'
+      className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${state === 'current'
           ? 'bg-[#071426] text-[#B9964A]'
           : state === 'done'
             ? 'bg-[#E8EEF7] text-[#123B6D] ring-1 ring-[#123B6D]/15'
             : 'bg-[#E1E7EF] text-[#64748B]'
-      }`}
+        }`}
     >
       {index + 1}
     </span>
@@ -225,6 +223,13 @@ const BuilderNavbar = ({
               </button>
             ) : null}
           </SignedIn>
+
+          <a
+            href="https://careersenseai.com/pricing"
+            className="inline-flex h-9 items-center rounded-lg border border-[#E1E7EF] bg-white px-3.5 text-xs font-semibold text-[#475569] shadow-sm transition hover:border-[#123B6D]/30 hover:bg-[#E8EEF7] hover:text-[#071426]"
+          >
+            Pricing
+          </a>
 
           {primaryAction ? (
             <button
