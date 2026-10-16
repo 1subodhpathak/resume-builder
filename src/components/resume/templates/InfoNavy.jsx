@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  Globe,
+  Github,
   Award,
   BarChart3,
   BriefcaseBusiness,
@@ -249,6 +251,12 @@ const InfoNavy = ({ data }) => {
               {personal.email ? <div className="flex items-start gap-2 break-all"><Mail size={9} color={TEAL_LIGHT} className="mt-0.5 shrink-0" /><span>{personal.email}</span></div> : null}
               {personal.location ? <div className="flex items-start gap-2"><MapPin size={9} color={TEAL_LIGHT} className="mt-0.5 shrink-0" /><span>{personal.location}</span></div> : null}
               {personal.linkedin ? <div className="flex items-start gap-2 break-all"><Linkedin size={9} color={TEAL_LIGHT} className="mt-0.5 shrink-0" /><span>{personal.linkedin}</span></div> : null}
+
+        {personal.github ? <div className="flex items-start gap-2 break-all"><Github size={9} color={TEAL_LIGHT} className="mt-0.5 shrink-0" /><span>{personal.github}</span></div> : null}
+
+        {personal.portfolio ? <div className="flex items-start gap-2 break-all"><Globe size={9} color={TEAL_LIGHT} className="mt-0.5 shrink-0" /><span>{personal.portfolio}</span></div> : null}
+
+        {personal.website ? <div className="flex items-start gap-2 break-all"><Globe size={9} color={TEAL_LIGHT} className="mt-0.5 shrink-0" /><span>{personal.website}</span></div> : null}
             </div>
           ) : null}
         </div>

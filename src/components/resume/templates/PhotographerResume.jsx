@@ -610,6 +610,27 @@ const PhotographerResume = ({ data }) => {
                 <span>{personal.linkedin}</span>
               </div>
             ) : null}
+
+        {personal.github ? (
+              <div className="flex items-start gap-2.5 break-all">
+                <Globe size={12} className="mt-0.5 shrink-0" style={{ color: COPPER }} />
+                <span>GitHub: {personal.github}</span>
+              </div>
+            ) : null}
+
+        {personal.portfolio ? (
+              <div className="flex items-start gap-2.5 break-all">
+                <Globe size={12} className="mt-0.5 shrink-0" style={{ color: COPPER }} />
+                <span>Portfolio: {personal.portfolio}</span>
+              </div>
+            ) : null}
+
+        {personal.website ? (
+              <div className="flex items-start gap-2.5 break-all">
+                <Globe size={12} className="mt-0.5 shrink-0" style={{ color: COPPER }} />
+                <span>Website: {personal.website}</span>
+              </div>
+            ) : null}
           </div>
         </div>
       );

@@ -321,6 +321,9 @@ const AssociatePrime = ({ data }) => {
       { value: personal.email, label: 'Email' },
       { value: personal.location, label: 'Location' },
       { value: personal.linkedin, label: 'LinkedIn' },
+      { value: personal.github, label: 'GitHub' },
+      { value: personal.portfolio, label: 'Portfolio' },
+      { value: personal.website, label: 'Website' },
     ].filter((item) => item.value);
 
     return (

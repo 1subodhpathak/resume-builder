@@ -12,6 +12,8 @@ import {
   BriefcaseBusiness,
   Code2,
   FolderOpen,
+  Github,
+  Globe,
   GraduationCap,
   Languages as LanguagesIcon,
   Link as LinkIcon,
@@ -365,6 +367,30 @@ const ProductManager = ({ data }) => {
               <ContactLine
                 icon={LinkIcon}
                 value={personal.linkedin}
+                color={BLUE}
+              />
+            ) : null}
+
+            {personal.github ? (
+              <ContactLine
+                icon={Github}
+                value={personal.github}
+                color={BLUE}
+              />
+            ) : null}
+
+            {personal.portfolio ? (
+              <ContactLine
+                icon={Globe}
+                value={personal.portfolio}
+                color={BLUE}
+              />
+            ) : null}
+
+            {personal.website ? (
+              <ContactLine
+                icon={Globe}
+                value={personal.website}
                 color={BLUE}
               />
             ) : null}

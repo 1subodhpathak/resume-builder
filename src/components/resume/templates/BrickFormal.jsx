@@ -113,6 +113,12 @@ const BrickFormal = ({ data }) => {
             {personal.phone ? <div className="mt-1">{personal.phone}</div> : null}
             {personal.location ? <div className="mt-1">{personal.location}</div> : null}
             {personal.linkedin ? <div className="mt-1 break-all">{personal.linkedin}</div> : null}
+
+        {personal.github ? <div className="mt-1 break-all">GitHub: {personal.github}</div> : null}
+
+        {personal.portfolio ? <div className="mt-1 break-all">Portfolio: {personal.portfolio}</div> : null}
+
+        {personal.website ? <div className="mt-1 break-all">Website: {personal.website}</div> : null}
           </div>
         </div>
       </div>

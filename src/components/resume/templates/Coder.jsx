@@ -12,6 +12,8 @@ import {
   Code2,
   Database,
   FolderGit2,
+  Github,
+  Globe,
   GraduationCap,
   Languages as LanguagesIcon,
   Linkedin,
@@ -421,6 +423,39 @@ const Coder = ({ data }) => {
                   style={{ color: GREEN }}
                 />
                 <span>{personal.linkedin}</span>
+              </div>
+            ) : null}
+
+            {personal.github ? (
+              <div className="flex items-start gap-2 break-all">
+                <Github
+                  size={9}
+                  className="mt-0.5 shrink-0"
+                  style={{ color: GREEN }}
+                />
+                <span>{personal.github}</span>
+              </div>
+            ) : null}
+
+            {personal.portfolio ? (
+              <div className="flex items-start gap-2 break-all">
+                <Globe
+                  size={9}
+                  className="mt-0.5 shrink-0"
+                  style={{ color: GREEN }}
+                />
+                <span>{personal.portfolio}</span>
+              </div>
+            ) : null}
+
+            {personal.website ? (
+              <div className="flex items-start gap-2 break-all">
+                <Globe
+                  size={9}
+                  className="mt-0.5 shrink-0"
+                  style={{ color: GREEN }}
+                />
+                <span>{personal.website}</span>
               </div>
             ) : null}
           </div>

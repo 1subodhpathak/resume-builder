@@ -6,7 +6,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Mail, Phone, MapPin, Linkedin } from 'lucide-react';
+import {
+  Globe,
+  Github, Mail, Phone, MapPin, Linkedin } from 'lucide-react';
 
 const Medical = ({ data }) => {
   const {
@@ -262,6 +264,27 @@ const Medical = ({ data }) => {
                 <span className="flex items-center gap-1.5 break-all">
                   <Linkedin size={11} />
                   {personal.linkedin}
+                </span>
+              ) : null}
+
+        {personal.github ? (
+                <span className="flex items-center gap-1.5 break-all">
+                  <Github size={11} />
+                  {personal.github}
+                </span>
+              ) : null}
+
+        {personal.portfolio ? (
+                <span className="flex items-center gap-1.5 break-all">
+                  <Globe size={11} />
+                  {personal.portfolio}
+                </span>
+              ) : null}
+
+        {personal.website ? (
+                <span className="flex items-center gap-1.5 break-all">
+                  <Globe size={11} />
+                  {personal.website}
                 </span>
               ) : null}
             </div>

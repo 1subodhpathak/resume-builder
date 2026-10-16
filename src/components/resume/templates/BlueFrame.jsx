@@ -7,6 +7,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  Globe,
+  Github,
   Award,
   BriefcaseBusiness,
   FolderKanban,
@@ -300,6 +302,27 @@ const BlueFrame = ({ data }) => {
           <div className="flex items-center gap-2 break-all">
             <Linkedin size={10} style={{ color: BLUE_2 }} />
             <span>{personal.linkedin}</span>
+          </div>
+        ) : null}
+
+        {personal.github ? (
+          <div className="flex items-center gap-2 break-all">
+            <Github size={10} style={{ color: BLUE_2 }} />
+            <span>{personal.github}</span>
+          </div>
+        ) : null}
+
+        {personal.portfolio ? (
+          <div className="flex items-center gap-2 break-all">
+            <Globe size={10} style={{ color: BLUE_2 }} />
+            <span>{personal.portfolio}</span>
+          </div>
+        ) : null}
+
+        {personal.website ? (
+          <div className="flex items-center gap-2 break-all">
+            <Globe size={10} style={{ color: BLUE_2 }} />
+            <span>{personal.website}</span>
           </div>
         ) : null}
       </div>

@@ -220,6 +220,12 @@ const Skyline = ({ data }) => {
               {personal.phone ? <span className="text-[7px] font-bold" style={{ color: SKY_DEEP }}>{personal.phone}</span> : null}
               {personal.location ? <span className="break-words text-[7px] font-bold" style={{ color: SKY_DEEP }}>{personal.location}</span> : null}
               {personal.linkedin ? <span className="break-all text-[7px] font-bold" style={{ color: SKY_DEEP }}>{personal.linkedin}</span> : null}
+
+        {personal.github ? <span className="break-all text-[7px] font-bold" style={{ color: SKY_DEEP }}>GitHub: {personal.github}</span> : null}
+
+        {personal.portfolio ? <span className="break-all text-[7px] font-bold" style={{ color: SKY_DEEP }}>Portfolio: {personal.portfolio}</span> : null}
+
+        {personal.website ? <span className="break-all text-[7px] font-bold" style={{ color: SKY_DEEP }}>Website: {personal.website}</span> : null}
             </div>
           ) : null}
         </>

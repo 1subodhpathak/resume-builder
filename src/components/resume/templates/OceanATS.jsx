@@ -200,6 +200,12 @@ const OceanATS = ({ data }) => {
         {personal.location ? <span>{personal.location}</span> : null}
         {(personal.email || personal.phone || personal.location) && personal.linkedin ? <span>|</span> : null}
         {personal.linkedin ? <span className="break-all">{personal.linkedin}</span> : null}
+
+        {personal.github ? <span className="break-all">GitHub: {personal.github}</span> : null}
+
+        {personal.portfolio ? <span className="break-all">Portfolio: {personal.portfolio}</span> : null}
+
+        {personal.website ? <span className="break-all">Website: {personal.website}</span> : null}
       </div>
     </header>
   );

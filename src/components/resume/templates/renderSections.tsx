@@ -40,6 +40,9 @@ export const Sections = {
             {p.phone && <span>{p.phone}</span>}
             {p.location && <span>{p.location}</span>}
             {p.linkedin && <span>{p.linkedin}</span>}
+            {p.github && <span>GitHub: {p.github}</span>}
+            {p.portfolio && <span>Portfolio: {p.portfolio}</span>}
+            {p.website && <span>Website: {p.website}</span>}
           </div>
         </div>
 

@@ -10,6 +10,8 @@ import {
   Award,
   BadgeCheck,
   BriefcaseBusiness,
+  Github,
+  Globe,
   GraduationCap,
   Languages as LanguagesIcon,
   Link as LinkIcon,
@@ -611,6 +613,24 @@ const CareerLaunch = ({ data }) => {
         label: 'Location',
         value: personal.location,
         icon: MapPin,
+      },
+      {
+        path: 'personal.github',
+        label: 'GitHub',
+        value: personal.github,
+        icon: Github,
+      },
+      {
+        path: 'personal.portfolio',
+        label: 'Portfolio',
+        value: personal.portfolio,
+        icon: Globe,
+      },
+      {
+        path: 'personal.website',
+        label: 'Website',
+        value: personal.website,
+        icon: Globe,
       },
     ].filter((item) => item.value);
 

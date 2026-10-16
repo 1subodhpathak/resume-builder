@@ -7,6 +7,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  Globe,
+  Github,
   BarChart3,
   Briefcase,
   Database,
@@ -502,6 +504,33 @@ const ReportingMisDashboard = ({ data }) => {
                     <Linkedin size={8} className="text-[#fbbd08]" />
                   </div>
                   <span>{personal.linkedin}</span>
+                </div>
+              ) : null}
+
+        {personal.github ? (
+                <div className="flex items-center gap-2 break-all">
+                  <div className="rounded-full bg-white/10 p-1">
+                    <Github size={8} className="text-[#fbbd08]" />
+                  </div>
+                  <span>{personal.github}</span>
+                </div>
+              ) : null}
+
+        {personal.portfolio ? (
+                <div className="flex items-center gap-2 break-all">
+                  <div className="rounded-full bg-white/10 p-1">
+                    <Globe size={8} className="text-[#fbbd08]" />
+                  </div>
+                  <span>{personal.portfolio}</span>
+                </div>
+              ) : null}
+
+        {personal.website ? (
+                <div className="flex items-center gap-2 break-all">
+                  <div className="rounded-full bg-white/10 p-1">
+                    <Globe size={8} className="text-[#fbbd08]" />
+                  </div>
+                  <span>{personal.website}</span>
                 </div>
               ) : null}
             </div>

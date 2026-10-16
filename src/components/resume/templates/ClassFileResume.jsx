@@ -5,6 +5,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  Globe,
+  Github,
   Award,
   Braces,
   ChevronRight,
@@ -250,6 +252,27 @@ const ClassFileResume = ({ data }) => {
                 <span className="flex items-center gap-1 break-all">
                   <Linkedin size={7} style={{ color: CYAN }} />
                   {personal.linkedin}
+                </span>
+              ) : null}
+
+        {personal.github ? (
+                <span className="flex items-center gap-1 break-all">
+                  <Github size={7} style={{ color: CYAN }} />
+                  {personal.github}
+                </span>
+              ) : null}
+
+        {personal.portfolio ? (
+                <span className="flex items-center gap-1 break-all">
+                  <Globe size={7} style={{ color: CYAN }} />
+                  {personal.portfolio}
+                </span>
+              ) : null}
+
+        {personal.website ? (
+                <span className="flex items-center gap-1 break-all">
+                  <Globe size={7} style={{ color: CYAN }} />
+                  {personal.website}
                 </span>
               ) : null}
             </div>

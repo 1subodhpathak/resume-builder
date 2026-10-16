@@ -8,8 +8,8 @@ const FormattedTextBlock = ({
   unorderedListClassName = '',
   orderedListClassName = '',
   itemClassName = '',
-  editablePath,
-  editableLabel,
+  editablePath = '',
+  editableLabel = '',
   editableMultiline = true,
 }) => {
   if (!text?.trim()) {

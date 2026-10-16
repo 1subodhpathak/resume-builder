@@ -296,6 +296,24 @@ const Tech = ({ data }) => {
                   git/in: <span style={{ color: TEXT }}>"{personal.linkedin}"</span>
                 </span>
               ) : null}
+
+              {personal.github ? (
+                <span className="break-all" style={{ color: CYAN }}>
+                  github: <span style={{ color: TEXT }}>"{personal.github}"</span>
+                </span>
+              ) : null}
+
+              {personal.portfolio ? (
+                <span className="break-all" style={{ color: CYAN }}>
+                  portfolio: <span style={{ color: TEXT }}>"{personal.portfolio}"</span>
+                </span>
+              ) : null}
+
+              {personal.website ? (
+                <span className="break-all" style={{ color: CYAN }}>
+                  website: <span style={{ color: TEXT }}>"{personal.website}"</span>
+                </span>
+              ) : null}
             </div>
           ) : null}
         </div>

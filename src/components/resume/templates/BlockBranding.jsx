@@ -7,6 +7,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  Globe,
+  Github,
   Award,
   BriefcaseBusiness,
   FolderKanban,
@@ -367,6 +369,42 @@ const BlockBranding = ({ data }) => {
                 <div className="flex items-start gap-2 break-all text-[8px] leading-[1.35] text-slate-200">
                   <Linkedin size={10} className="mt-0.5 shrink-0" />
                   <span>{personal.linkedin}</span>
+                </div>
+              </div>
+            ) : null}
+
+        {personal.github ? (
+              <div>
+                <div className="mb-1 text-[6.5px] font-black uppercase tracking-[0.18em] text-slate-500">
+                  LinkedIn
+                </div>
+                <div className="flex items-start gap-2 break-all text-[8px] leading-[1.35] text-slate-200">
+                  <Github size={10} className="mt-0.5 shrink-0" />
+                  <span>{personal.github}</span>
+                </div>
+              </div>
+            ) : null}
+
+        {personal.portfolio ? (
+              <div>
+                <div className="mb-1 text-[6.5px] font-black uppercase tracking-[0.18em] text-slate-500">
+                  LinkedIn
+                </div>
+                <div className="flex items-start gap-2 break-all text-[8px] leading-[1.35] text-slate-200">
+                  <Globe size={10} className="mt-0.5 shrink-0" />
+                  <span>{personal.portfolio}</span>
+                </div>
+              </div>
+            ) : null}
+
+        {personal.website ? (
+              <div>
+                <div className="mb-1 text-[6.5px] font-black uppercase tracking-[0.18em] text-slate-500">
+                  LinkedIn
+                </div>
+                <div className="flex items-start gap-2 break-all text-[8px] leading-[1.35] text-slate-200">
+                  <Globe size={10} className="mt-0.5 shrink-0" />
+                  <span>{personal.website}</span>
                 </div>
               </div>
             ) : null}

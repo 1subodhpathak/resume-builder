@@ -254,20 +254,21 @@ const Ats = ({ data }) => {
       ) : null}
 
       <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[9px] font-medium leading-4 text-black">
-        {personal.location ? <span>{personal.location}</span> : null}
-        {personal.location && personal.phone ? <span>•</span> : null}
-        {personal.phone ? <span>{personal.phone}</span> : null}
-        {(personal.location || personal.phone) && personal.email ? (
-          <span>•</span>
-        ) : null}
-        {personal.email ? <span>{personal.email}</span> : null}
+        {[
+          personal.location ? { key: 'location', value: personal.location } : null,
+          personal.phone ? { key: 'phone', value: personal.phone } : null,
+          personal.email ? { key: 'email', value: personal.email } : null,
+          personal.linkedin ? { key: 'linkedin', value: personal.linkedin } : null,
+          personal.github ? { key: 'github', value: `GitHub: ${personal.github}` } : null,
+          personal.portfolio ? { key: 'portfolio', value: `Portfolio: ${personal.portfolio}` } : null,
+          personal.website ? { key: 'website', value: `Website: ${personal.website}` } : null,
+        ].filter(Boolean).map((item, idx) => (
+          <React.Fragment key={item.key}>
+            {idx > 0 && <span>•</span>}
+            <span className="break-all">{item.value}</span>
+          </React.Fragment>
+        ))}
       </div>
-
-      {personal.linkedin ? (
-        <div className="mt-1 break-all text-[9px] font-medium leading-4 text-black">
-          {personal.linkedin}
-        </div>
-      ) : null}
     </div>
   );
 

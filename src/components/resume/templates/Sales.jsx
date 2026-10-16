@@ -11,6 +11,8 @@ import {
   BadgeCheck,
   BriefcaseBusiness,
   FolderOpen,
+  Github,
+  Globe,
   Languages as LanguagesIcon,
   Link as LinkIcon,
   Mail,
@@ -262,6 +264,18 @@ const Sales = ({ data }) => {
               <HeaderContactLine
                 icon={LinkIcon}
                 value={personal.linkedin}
+              />
+              <HeaderContactLine
+                icon={Github}
+                value={personal.github}
+              />
+              <HeaderContactLine
+                icon={Globe}
+                value={personal.portfolio}
+              />
+              <HeaderContactLine
+                icon={Globe}
+                value={personal.website}
               />
             </div>
           </div>

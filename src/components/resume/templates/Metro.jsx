@@ -7,6 +7,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  Globe,
+  Github,
   Mail,
   Phone,
   MapPin,
@@ -264,6 +266,36 @@ const Metro = ({ data }) => {
                 >
                   <Linkedin size={10} className="mr-1.5 inline mb-0.5" />
                   {personal.linkedin}
+                </span>
+              ) : null}
+
+        {personal.github ? (
+                <span
+                  className="break-all px-2.5 py-1.5 shadow-sm"
+                  style={{ backgroundColor: '#f8fafc', borderLeft: `3px solid ${AMBER}` }}
+                >
+                  <Github size={10} className="mr-1.5 inline mb-0.5" />
+                  {personal.github}
+                </span>
+              ) : null}
+
+        {personal.portfolio ? (
+                <span
+                  className="break-all px-2.5 py-1.5 shadow-sm"
+                  style={{ backgroundColor: '#f8fafc', borderLeft: `3px solid ${AMBER}` }}
+                >
+                  <Globe size={10} className="mr-1.5 inline mb-0.5" />
+                  {personal.portfolio}
+                </span>
+              ) : null}
+
+        {personal.website ? (
+                <span
+                  className="break-all px-2.5 py-1.5 shadow-sm"
+                  style={{ backgroundColor: '#f8fafc', borderLeft: `3px solid ${AMBER}` }}
+                >
+                  <Globe size={10} className="mr-1.5 inline mb-0.5" />
+                  {personal.website}
                 </span>
               ) : null}
             </div>

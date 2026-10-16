@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin, Linkedin } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Github, Globe } from 'lucide-react';
 
 const Creative = ({ data }) => {
   const {
@@ -47,6 +47,9 @@ const Creative = ({ data }) => {
               {personal.phone && <span className="flex items-center gap-1.5"><Phone size={14}/> {personal.phone}</span>}
               {personal.location && <span className="flex items-center gap-1.5 break-words"><MapPin size={14}/> {personal.location}</span>}
               {personal.linkedin && <span className="flex items-center gap-1.5 break-all"><Linkedin size={14}/> {personal.linkedin}</span>}
+              {personal.github && <span className="flex items-center gap-1.5 break-all"><Github size={14}/> {personal.github}</span>}
+              {personal.portfolio && <span className="flex items-center gap-1.5 break-all"><Globe size={14}/> {personal.portfolio}</span>}
+              {personal.website && <span className="flex items-center gap-1.5 break-all"><Globe size={14}/> {personal.website}</span>}
             </div>
           </div>
         </div>

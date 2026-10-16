@@ -3,6 +3,8 @@ import {
   Award,
   BadgeCheck,
   BriefcaseBusiness,
+  Github,
+  Globe,
   GraduationCap,
   Languages as LanguagesIcon,
   Link2,
@@ -242,6 +244,18 @@ const InfluencerProfile = ({ data }) => {
 
           <ContactLine icon={Link2}>
             {personal.linkedin}
+          </ContactLine>
+
+          <ContactLine icon={Github}>
+            {personal.github}
+          </ContactLine>
+
+          <ContactLine icon={Globe}>
+            {personal.portfolio}
+          </ContactLine>
+
+          <ContactLine icon={Globe}>
+            {personal.website}
           </ContactLine>
         </div>
       </div>

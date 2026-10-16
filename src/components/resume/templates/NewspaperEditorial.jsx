@@ -387,6 +387,18 @@ const NewspaperEditorial = ({ data }) => {
             {personal.linkedin ? (
               <span>{personal.linkedin}</span>
             ) : null}
+
+        {personal.github ? (
+              <span>GitHub: {personal.github}</span>
+            ) : null}
+
+        {personal.portfolio ? (
+              <span>Portfolio: {personal.portfolio}</span>
+            ) : null}
+
+        {personal.website ? (
+              <span>Website: {personal.website}</span>
+            ) : null}
           </div>
         </header>
 

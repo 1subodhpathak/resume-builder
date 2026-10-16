@@ -308,6 +308,27 @@ const OrangePunch = ({ data }) => {
                 {personal.linkedin}
               </div>
             ) : null}
+
+        {personal.github ? (
+              <div className="break-all">
+                <span className="mr-1.5" style={{ color: ORANGE }}>↗</span>
+                GitHub: {personal.github}
+              </div>
+            ) : null}
+
+        {personal.portfolio ? (
+              <div className="break-all">
+                <span className="mr-1.5" style={{ color: ORANGE }}>↗</span>
+                Portfolio: {personal.portfolio}
+              </div>
+            ) : null}
+
+        {personal.website ? (
+              <div className="break-all">
+                <span className="mr-1.5" style={{ color: ORANGE }}>↗</span>
+                Website: {personal.website}
+              </div>
+            ) : null}
           </div>
         </div>
       ) : (

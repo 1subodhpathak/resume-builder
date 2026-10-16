@@ -203,6 +203,24 @@ const Architect = ({ data }) => {
                   {personal.linkedin}
                 </p>
               ) : null}
+
+        {personal.github ? (
+                <p className="break-all text-[9.5px] font-medium" style={{ color: MUTED }}>
+                  GitHub: {personal.github}
+                </p>
+              ) : null}
+
+        {personal.portfolio ? (
+                <p className="break-all text-[9.5px] font-medium" style={{ color: MUTED }}>
+                  Portfolio: {personal.portfolio}
+                </p>
+              ) : null}
+
+        {personal.website ? (
+                <p className="break-all text-[9.5px] font-medium" style={{ color: MUTED }}>
+                  Website: {personal.website}
+                </p>
+              ) : null}
             </div>
           </div>
         </div>

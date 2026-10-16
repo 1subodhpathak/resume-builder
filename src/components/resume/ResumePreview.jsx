@@ -87,9 +87,6 @@ const normalizePreviewData = (data = {}, templateId) => {
   const personal = normalizedData.personal || {};
   const supplementalLinks = [
     templateNeedsLinkedInFallback(templateId) && personal.linkedin ? `LinkedIn: ${personal.linkedin}` : '',
-    personal.github ? `GitHub: ${personal.github}` : '',
-    personal.portfolio ? `Portfolio: ${personal.portfolio}` : '',
-    personal.website ? `Website: ${personal.website}` : '',
   ];
   normalizedData.personal = {
     ...personal,

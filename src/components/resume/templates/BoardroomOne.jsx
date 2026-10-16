@@ -12,6 +12,8 @@ import {
   BriefcaseBusiness,
   Code2,
   FolderOpen,
+  Github,
+  Globe,
   GraduationCap,
   Languages as LanguagesIcon,
   Link as LinkIcon,
@@ -489,6 +491,30 @@ const BoardroomOne = ({ data }) => {
                 label="LinkedIn"
                 value={personal.linkedin}
                 icon={LinkIcon}
+                measurement={measurement}
+              />
+
+              <ContactLine
+                path="personal.github"
+                label="GitHub"
+                value={personal.github}
+                icon={Github}
+                measurement={measurement}
+              />
+
+              <ContactLine
+                path="personal.portfolio"
+                label="Portfolio"
+                value={personal.portfolio}
+                icon={Globe}
+                measurement={measurement}
+              />
+
+              <ContactLine
+                path="personal.website"
+                label="Website"
+                value={personal.website}
+                icon={Globe}
                 measurement={measurement}
               />
             </div>

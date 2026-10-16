@@ -276,6 +276,27 @@ const MotionDesignerBoard = ({ data }) => {
                       <span>{personal.linkedin}</span>
                     </div>
                   ) : null}
+
+        {personal.github ? (
+                    <div className="flex items-center gap-1.5 break-all">
+                      <QrCode size={10} className="shrink-0 text-black" />
+                      <span>GitHub: {personal.github}</span>
+                    </div>
+                  ) : null}
+
+        {personal.portfolio ? (
+                    <div className="flex items-center gap-1.5 break-all">
+                      <QrCode size={10} className="shrink-0 text-black" />
+                      <span>Portfolio: {personal.portfolio}</span>
+                    </div>
+                  ) : null}
+
+        {personal.website ? (
+                    <div className="flex items-center gap-1.5 break-all">
+                      <QrCode size={10} className="shrink-0 text-black" />
+                      <span>Website: {personal.website}</span>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>

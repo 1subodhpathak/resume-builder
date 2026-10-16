@@ -183,27 +183,20 @@ const Executive = ({ data }) => {
         ) : null}
 
         <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 font-sans text-[8.5px] leading-4 text-slate-600">
-          {personal.phone ? <span>{personal.phone}</span> : null}
-          {personal.phone && personal.email ? <span>•</span> : null}
-
-          {personal.email ? (
-            <span className="break-all">{personal.email}</span>
-          ) : null}
-
-          {(personal.phone || personal.email) && personal.location ? (
-            <span>•</span>
-          ) : null}
-
-          {personal.location ? <span>{personal.location}</span> : null}
-
-          {(personal.phone || personal.email || personal.location) &&
-          personal.linkedin ? (
-            <span>•</span>
-          ) : null}
-
-          {personal.linkedin ? (
-            <span className="break-all">{personal.linkedin}</span>
-          ) : null}
+          {[
+            personal.phone ? { key: 'phone', value: personal.phone } : null,
+            personal.email ? { key: 'email', value: personal.email } : null,
+            personal.location ? { key: 'location', value: personal.location } : null,
+            personal.linkedin ? { key: 'linkedin', value: personal.linkedin } : null,
+            personal.github ? { key: 'github', value: `GitHub: ${personal.github}` } : null,
+            personal.portfolio ? { key: 'portfolio', value: `Portfolio: ${personal.portfolio}` } : null,
+            personal.website ? { key: 'website', value: `Website: ${personal.website}` } : null,
+          ].filter(Boolean).map((item, idx) => (
+            <React.Fragment key={item.key}>
+              {idx > 0 && <span>•</span>}
+              <span className="break-all">{item.value}</span>
+            </React.Fragment>
+          ))}
         </div>
       </div>
     </header>

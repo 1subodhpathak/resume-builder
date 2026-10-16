@@ -7,6 +7,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  Globe,
+  Github,
   Linkedin,
   Mail,
   MapPin,
@@ -277,6 +279,27 @@ const Startup = ({ data }) => {
                     <span className="flex items-center gap-1.5 break-all">
                       <Linkedin size={9} />
                       {personal.linkedin}
+                    </span>
+                  ) : null}
+
+        {personal.github ? (
+                    <span className="flex items-center gap-1.5 break-all">
+                      <Github size={9} />
+                      {personal.github}
+                    </span>
+                  ) : null}
+
+        {personal.portfolio ? (
+                    <span className="flex items-center gap-1.5 break-all">
+                      <Globe size={9} />
+                      {personal.portfolio}
+                    </span>
+                  ) : null}
+
+        {personal.website ? (
+                    <span className="flex items-center gap-1.5 break-all">
+                      <Globe size={9} />
+                      {personal.website}
                     </span>
                   ) : null}
                 </div>

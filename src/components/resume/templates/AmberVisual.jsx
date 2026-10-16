@@ -71,6 +71,8 @@ const measureOuterHeight = (node) => {
   );
 };
 import {
+  Globe,
+  Github,
   Award,
   BriefcaseBusiness,
   FolderKanban,
@@ -397,6 +399,27 @@ const AmberVisual = ({ data }) => {
                 <span className="flex items-center gap-1.5 break-all">
                   <Linkedin size={10} />
                   {personal.linkedin}
+                </span>
+              ) : null}
+
+        {personal.github ? (
+                <span className="flex items-center gap-1.5 break-all">
+                  <Github size={10} />
+                  {personal.github}
+                </span>
+              ) : null}
+
+        {personal.portfolio ? (
+                <span className="flex items-center gap-1.5 break-all">
+                  <Globe size={10} />
+                  {personal.portfolio}
+                </span>
+              ) : null}
+
+        {personal.website ? (
+                <span className="flex items-center gap-1.5 break-all">
+                  <Globe size={10} />
+                  {personal.website}
                 </span>
               ) : null}
             </div>

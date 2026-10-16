@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
-  Download, Trash2, User,
+  Download, Loader2, Trash2, User,
   PanelLeftOpen, Camera, X, Eye, Search, ScanLine, MessageSquare, PencilLine, ZoomIn, ZoomOut, Maximize2, Save, Gauge, ChevronDown, ChevronUp, LayoutGrid, Sparkles, AlertTriangle, BadgeInfo, CheckCircle2
 } from 'lucide-react';
 
@@ -1628,6 +1628,7 @@ const Editor = ({
   const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
   const [editorTab, setEditorTab] = useState(() => getEditorTabForSection('personal', mode));
   const [isDownloadGateOpen, setIsDownloadGateOpen] = useState(false);
+  const [isCheckingPass, setIsCheckingPass] = useState(false);
   const pendingDownloadFnRef = useRef(null);
   const previewRef = useRef(null);
   const previewViewportRef = useRef(null);
@@ -3489,6 +3490,7 @@ const contentHeight = exportRoot.scrollHeight;
   };
 
   const handleDownload = async ({ preferVisiblePreview = false } = {}) => {
+    if (isCheckingPass) return;
     // Let the latest controlled-input change finish rendering before the DOM is cloned.
     await new Promise((resolve) =>
       window.requestAnimationFrame(() => window.requestAnimationFrame(resolve))
@@ -3520,21 +3522,28 @@ const contentHeight = exportRoot.scrollHeight;
       );
     }
 
-    if (user?.id) {
-      try {
-        const passCheck = await checkDownloadPass(
-          user.id,
-          'resume_pdf',
-          persistedResumeIdRef.current || 'active_resume'
-        );
-        if (!passCheck.canDownload) {
-          pendingDownloadFnRef.current = () => executePdfExport(sourceNode);
-          setIsDownloadGateOpen(true);
-          return;
-        }
-      } catch (gateErr) {
-        console.warn('[Download pass check notice]', gateErr);
+    if (!user?.id) {
+      pendingDownloadFnRef.current = () => executePdfExport(sourceNode);
+      setIsDownloadGateOpen(true);
+      return;
+    }
+
+    setIsCheckingPass(true);
+    try {
+      const passCheck = await checkDownloadPass(
+        user.id,
+        'resume_pdf',
+        persistedResumeIdRef.current || 'active_resume'
+      );
+      if (!passCheck.canDownload) {
+        pendingDownloadFnRef.current = () => executePdfExport(sourceNode);
+        setIsDownloadGateOpen(true);
+        return;
       }
+    } catch (gateErr) {
+      console.warn('[Download pass check notice]', gateErr);
+    } finally {
+      setIsCheckingPass(false);
     }
 
     await executePdfExport(sourceNode);
@@ -3718,9 +3727,15 @@ const contentHeight = exportRoot.scrollHeight;
                 <button
                   type="button"
                   onClick={() => handleDownload({ preferVisiblePreview: true })}
-                  className="theme-primary-button px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all shadow-md active:scale-95"
+                  disabled={isCheckingPass}
+                  className="theme-primary-button px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all shadow-md active:scale-95 disabled:opacity-60"
                 >
-                  <Download size={16} /> Print / Save PDF
+                  {isCheckingPass ? (
+                    <Loader2 size={16} className="animate-spin text-white" />
+                  ) : (
+                    <Download size={16} />
+                  )}
+                  {isCheckingPass ? 'Preparing...' : 'Print / Save PDF'}
                 </button>
                 <button
                   onClick={() => setIsPreviewModalOpen(false)}
@@ -5068,11 +5083,16 @@ const contentHeight = exportRoot.scrollHeight;
                       <button
                         type="button"
                         onClick={handleDownload}
-                        className="inline-flex h-9 items-center gap-2 rounded-[0.65rem] border border-[#B88A31] bg-[linear-gradient(180deg,#E4C46E_0%,#C89F47_100%)] px-3 text-[11px] font-extrabold text-[#10243E] shadow-[0_5px_14px_rgba(185,150,74,0.18)] transition-all hover:-translate-y-0.5 hover:brightness-105"
+                        disabled={isCheckingPass}
+                        className="inline-flex h-9 items-center gap-2 rounded-[0.65rem] border border-[#B88A31] bg-[linear-gradient(180deg,#E4C46E_0%,#C89F47_100%)] px-3 text-[11px] font-extrabold text-[#10243E] shadow-[0_5px_14px_rgba(185,150,74,0.18)] transition-all hover:-translate-y-0.5 hover:brightness-105 disabled:opacity-60"
                         title="Export resume as PDF"
                       >
-                        <Download size={14} />
-                        Export PDF
+                        {isCheckingPass ? (
+                          <Loader2 size={14} className="animate-spin text-[#10243E]" />
+                        ) : (
+                          <Download size={14} />
+                        )}
+                        {isCheckingPass ? 'Preparing...' : 'Export PDF'}
                       </button>
                       <button
                         type="button"

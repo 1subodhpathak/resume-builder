@@ -299,6 +299,24 @@ const NavySidebar = ({ data }) => {
                 {personal.linkedin}
               </div>
             ) : null}
+
+        {personal.github ? (
+              <div className="break-all font-medium" style={{ color: '#5eead4' }}>
+                GitHub: {personal.github}
+              </div>
+            ) : null}
+
+        {personal.portfolio ? (
+              <div className="break-all font-medium" style={{ color: '#5eead4' }}>
+                Portfolio: {personal.portfolio}
+              </div>
+            ) : null}
+
+        {personal.website ? (
+              <div className="break-all font-medium" style={{ color: '#5eead4' }}>
+                Website: {personal.website}
+              </div>
+            ) : null}
           </div>
         </>
       ) : (

@@ -259,6 +259,24 @@ const AccentGrid = ({ data }) => {
                 {personal.linkedin}
               </div>
             ) : null}
+
+        {personal.github ? (
+              <div className="break-all text-indigo-500">
+                GitHub: {personal.github}
+              </div>
+            ) : null}
+
+        {personal.portfolio ? (
+              <div className="break-all text-indigo-500">
+                Portfolio: {personal.portfolio}
+              </div>
+            ) : null}
+
+        {personal.website ? (
+              <div className="break-all text-indigo-500">
+                Website: {personal.website}
+              </div>
+            ) : null}
           </div>
         </div>
       )}

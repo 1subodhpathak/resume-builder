@@ -7,6 +7,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  Globe,
+  Github,
   Award,
   BriefcaseBusiness,
   FolderKanban,
@@ -267,6 +269,27 @@ const ImpactHeader = ({ data }) => {
                   <span className="flex items-center gap-1.5 break-all">
                     <Linkedin size={8} style={{ color: '#fca5a5' }} />
                     {personal.linkedin}
+                  </span>
+                ) : null}
+
+        {personal.github ? (
+                  <span className="flex items-center gap-1.5 break-all">
+                    <Github size={8} style={{ color: '#fca5a5' }} />
+                    {personal.github}
+                  </span>
+                ) : null}
+
+        {personal.portfolio ? (
+                  <span className="flex items-center gap-1.5 break-all">
+                    <Globe size={8} style={{ color: '#fca5a5' }} />
+                    {personal.portfolio}
+                  </span>
+                ) : null}
+
+        {personal.website ? (
+                  <span className="flex items-center gap-1.5 break-all">
+                    <Globe size={8} style={{ color: '#fca5a5' }} />
+                    {personal.website}
                   </span>
                 ) : null}
               </div>

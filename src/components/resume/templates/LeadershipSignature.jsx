@@ -10,6 +10,8 @@ import {
   Award,
   BadgeCheck,
   BriefcaseBusiness,
+  Github,
+  Globe,
   GraduationCap,
   Languages as LanguagesIcon,
   Link as LinkIcon,
@@ -429,6 +431,27 @@ const LeadershipSignature = ({ data }) => {
               <div className="flex items-start gap-2.5 text-[7.8px] leading-4 text-white/78">
                 <MapPin size={10} className="mt-0.5 shrink-0 text-[#D8BE7B]" />
                 <span>{personal.location}</span>
+              </div>
+            ) : null}
+
+            {personal.github ? (
+              <div className="flex items-start gap-2.5 text-[7.8px] leading-4 text-white/78">
+                <Github size={10} className="mt-0.5 shrink-0 text-[#D8BE7B]" />
+                <span className="break-all">{personal.github}</span>
+              </div>
+            ) : null}
+
+            {personal.portfolio ? (
+              <div className="flex items-start gap-2.5 text-[7.8px] leading-4 text-white/78">
+                <Globe size={10} className="mt-0.5 shrink-0 text-[#D8BE7B]" />
+                <span className="break-all">{personal.portfolio}</span>
+              </div>
+            ) : null}
+
+            {personal.website ? (
+              <div className="flex items-start gap-2.5 text-[7.8px] leading-4 text-white/78">
+                <Globe size={10} className="mt-0.5 shrink-0 text-[#D8BE7B]" />
+                <span className="break-all">{personal.website}</span>
               </div>
             ) : null}
           </div>

@@ -7,6 +7,7 @@ import React, {
   useState,
 } from 'react';
 import {
+  Github,
   Award,
   Briefcase,
   FolderGit2,
@@ -335,6 +336,27 @@ const InfoTeal = ({ data }) => {
                   <div className="flex items-center gap-2">
                     <Linkedin size={9} color={TEAL} />
                     <span className="break-all">{personal.linkedin}</span>
+                  </div>
+                ) : null}
+
+        {personal.github ? (
+                  <div className="flex items-center gap-2">
+                    <Github size={9} color={TEAL} />
+                    <span className="break-all">{personal.github}</span>
+                  </div>
+                ) : null}
+
+        {personal.portfolio ? (
+                  <div className="flex items-center gap-2">
+                    <Globe size={9} color={TEAL} />
+                    <span className="break-all">{personal.portfolio}</span>
+                  </div>
+                ) : null}
+
+        {personal.website ? (
+                  <div className="flex items-center gap-2">
+                    <Globe size={9} color={TEAL} />
+                    <span className="break-all">{personal.website}</span>
                   </div>
                 ) : null}
               </div>

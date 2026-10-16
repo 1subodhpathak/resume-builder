@@ -7,6 +7,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  Globe,
+  Github,
   Activity,
   Award,
   Building2,
@@ -354,6 +356,27 @@ const DoctorProfile = ({ data }) => {
               <span className="flex items-center gap-1.5 break-all">
                 <Linkedin size={11} style={{ color: TEAL }} />
                 {personal.linkedin}
+              </span>
+            ) : null}
+
+        {personal.github ? (
+              <span className="flex items-center gap-1.5 break-all">
+                <Github size={11} style={{ color: TEAL }} />
+                {personal.github}
+              </span>
+            ) : null}
+
+        {personal.portfolio ? (
+              <span className="flex items-center gap-1.5 break-all">
+                <Globe size={11} style={{ color: TEAL }} />
+                {personal.portfolio}
+              </span>
+            ) : null}
+
+        {personal.website ? (
+              <span className="flex items-center gap-1.5 break-all">
+                <Globe size={11} style={{ color: TEAL }} />
+                {personal.website}
               </span>
             ) : null}
           </div>

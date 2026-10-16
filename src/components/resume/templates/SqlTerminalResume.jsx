@@ -162,6 +162,24 @@ const SqlTerminalResume = ({ data }) => {
                 {personal.linkedin}
               </div>
             ) : null}
+
+        {personal.github ? (
+              <div className="mt-1 break-all" style={{ color: BLUE_DARK }}>
+                GitHub: {personal.github}
+              </div>
+            ) : null}
+
+        {personal.portfolio ? (
+              <div className="mt-1 break-all" style={{ color: BLUE_DARK }}>
+                Portfolio: {personal.portfolio}
+              </div>
+            ) : null}
+
+        {personal.website ? (
+              <div className="mt-1 break-all" style={{ color: BLUE_DARK }}>
+                Website: {personal.website}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

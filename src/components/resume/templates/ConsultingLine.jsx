@@ -11,6 +11,8 @@ import {
   BadgeCheck,
   BriefcaseBusiness,
   FolderOpen,
+  Github,
+  Globe,
   GraduationCap,
   Languages as LanguagesIcon,
   Link as LinkIcon,
@@ -486,6 +488,24 @@ const ConsultingLine = ({ data }) => {
         label: 'LinkedIn',
         value: personal.linkedin,
         icon: LinkIcon,
+      },
+      {
+        path: 'personal.github',
+        label: 'GitHub',
+        value: personal.github,
+        icon: Github,
+      },
+      {
+        path: 'personal.portfolio',
+        label: 'Portfolio',
+        value: personal.portfolio,
+        icon: Globe,
+      },
+      {
+        path: 'personal.website',
+        label: 'Website',
+        value: personal.website,
+        icon: Globe,
       },
     ].filter((item) => item.value);
 

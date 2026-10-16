@@ -7,6 +7,7 @@ import React, {
   useState,
 } from 'react';
 import {
+  Github,
   Award,
   BriefcaseBusiness,
   CheckCircle2,
@@ -107,6 +108,12 @@ const Designer = ({ data }) => {
           {personal.phone ? <span className="flex items-center gap-1.5"><Phone size={10} />{personal.phone}</span> : null}
           {personal.location ? <span className="flex items-center gap-1.5"><MapPin size={10} />{personal.location}</span> : null}
           {personal.linkedin ? <span className="flex items-center gap-1.5 break-all"><Linkedin size={10} />{personal.linkedin}</span> : null}
+
+        {personal.github ? <span className="flex items-center gap-1.5 break-all"><Github size={10} />{personal.github}</span> : null}
+
+        {personal.portfolio ? <span className="flex items-center gap-1.5 break-all"><Globe size={10} />{personal.portfolio}</span> : null}
+
+        {personal.website ? <span className="flex items-center gap-1.5 break-all"><Globe size={10} />{personal.website}</span> : null}
         </div>
       </div>
       {personal.photo ? <img src={personal.photo} alt="Profile" className="h-[24mm] w-[24mm] shrink-0 rounded-full object-cover shadow-sm" style={{ border: `3px solid ${ACCENT_LIGHT}` }} /> : null}

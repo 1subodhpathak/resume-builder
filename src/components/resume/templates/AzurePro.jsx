@@ -7,6 +7,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  Globe,
+  Github,
   Award,
   BriefcaseBusiness,
   FolderKanban,
@@ -332,6 +334,27 @@ const AzurePro = ({ data }) => {
               <div className="flex items-start gap-2 break-all">
                 <Linkedin size={11} className="mt-0.5 shrink-0" />
                 <span>{personal.linkedin}</span>
+              </div>
+            ) : null}
+
+        {personal.github ? (
+              <div className="flex items-start gap-2 break-all">
+                <Github size={11} className="mt-0.5 shrink-0" />
+                <span>{personal.github}</span>
+              </div>
+            ) : null}
+
+        {personal.portfolio ? (
+              <div className="flex items-start gap-2 break-all">
+                <Globe size={11} className="mt-0.5 shrink-0" />
+                <span>{personal.portfolio}</span>
+              </div>
+            ) : null}
+
+        {personal.website ? (
+              <div className="flex items-start gap-2 break-all">
+                <Globe size={11} className="mt-0.5 shrink-0" />
+                <span>{personal.website}</span>
               </div>
             ) : null}
           </div>

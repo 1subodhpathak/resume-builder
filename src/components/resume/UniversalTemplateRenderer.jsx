@@ -145,30 +145,29 @@ const sectionShellClass = (theme) => {
 };
 
 const ContactLine = ({ personal, theme }) => {
-  const contactItems = [personal.email, personal.phone, personal.location, personal.linkedin].filter(Boolean);
+  const contactItems = [
+    { key: 'email', value: personal.email, path: 'personal.email', label: 'Email' },
+    { key: 'phone', value: personal.phone, path: 'personal.phone', label: 'Phone' },
+    { key: 'location', value: personal.location, path: 'personal.location', label: 'Location' },
+    { key: 'linkedin', value: personal.linkedin, path: 'personal.linkedin', label: 'LinkedIn' },
+    { key: 'github', value: personal.github, path: 'personal.github', label: 'GitHub' },
+    { key: 'portfolio', value: personal.portfolio, path: 'personal.portfolio', label: 'Portfolio' },
+    { key: 'website', value: personal.website, path: 'personal.website', label: 'Website' },
+  ].filter((item) => Boolean(item.value));
+
   if (!contactItems.length) return null;
 
   return (
     <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[12px] font-medium" style={{ color: theme.muted }}>
       {contactItems.map((item) => (
         <PreviewEditableField
-          key={item}
-          path={
-            item === personal.email ? 'personal.email'
-              : item === personal.phone ? 'personal.phone'
-                : item === personal.location ? 'personal.location'
-                  : 'personal.linkedin'
-          }
-          label={
-            item === personal.email ? 'Email'
-              : item === personal.phone ? 'Phone'
-                : item === personal.location ? 'Location'
-                  : 'LinkedIn'
-          }
+          key={item.key}
+          path={item.path}
+          label={item.label}
           className="rounded-full border px-3 py-1"
           style={{ borderColor: theme.line, backgroundColor: `${theme.surface}` }}
         >
-          {item}
+          {item.value}
         </PreviewEditableField>
       ))}
     </div>

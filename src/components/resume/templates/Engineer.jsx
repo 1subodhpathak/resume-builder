@@ -11,6 +11,8 @@ import {
   BadgeCheck,
   BriefcaseBusiness,
   FolderOpen,
+  Github,
+  Globe,
   GraduationCap,
   Languages as LanguagesIcon,
   Link as LinkIcon,
@@ -676,6 +678,18 @@ const Engineer = ({ data }) => {
         {
           icon: LinkIcon,
           value: personal.linkedin,
+        },
+        {
+          icon: Github,
+          value: personal.github,
+        },
+        {
+          icon: Globe,
+          value: personal.portfolio,
+        },
+        {
+          icon: Globe,
+          value: personal.website,
         },
       ].filter((item) => item.value);
 

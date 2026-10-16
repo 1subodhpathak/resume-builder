@@ -5,6 +5,8 @@ import {
   BadgeCheck,
   Code2,
   Database,
+  Github,
+  Globe,
   GraduationCap,
   Languages as LanguagesIcon,
   Link as LinkIcon,
@@ -342,6 +344,9 @@ const DataScientist = ({ data }) => {
             <HeaderContact icon={Mail} value={personal.email} />
             <HeaderContact icon={MapPin} value={personal.location} />
             <HeaderContact icon={LinkIcon} value={personal.linkedin} />
+            <HeaderContact icon={Github} value={personal.github} />
+            <HeaderContact icon={Globe} value={personal.portfolio} />
+            <HeaderContact icon={Globe} value={personal.website} />
           </div>
         </div>
 

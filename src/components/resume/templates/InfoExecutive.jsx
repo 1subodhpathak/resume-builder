@@ -5,6 +5,7 @@ import React, {
   useState,
 } from 'react';
 import {
+  Github,
   Mail,
   Phone,
   MapPin,
@@ -402,6 +403,27 @@ const InfoExecutive = ({ data }) => {
                 <div className="flex items-center gap-2 break-all">
                   <Linkedin size={13} color={DARK} />
                   {personal.linkedin}
+                </div>
+              ) : null}
+
+        {personal.github ? (
+                <div className="flex items-center gap-2 break-all">
+                  <Github size={13} color={DARK} />
+                  {personal.github}
+                </div>
+              ) : null}
+
+        {personal.portfolio ? (
+                <div className="flex items-center gap-2 break-all">
+                  <Globe size={13} color={DARK} />
+                  {personal.portfolio}
+                </div>
+              ) : null}
+
+        {personal.website ? (
+                <div className="flex items-center gap-2 break-all">
+                  <Globe size={13} color={DARK} />
+                  {personal.website}
                 </div>
               ) : null}
             </div>

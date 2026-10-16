@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 import { mergeExperienceFragmentsOnPage } from '../templateSurfaceUtils';
 import {
+  Github,
+  Globe,
   Linkedin,
   Mail,
   MapPin,
@@ -365,6 +367,9 @@ const Developer = ({ data }) => {
               <ContactItem icon={Phone}>{personal.phone}</ContactItem>
               <ContactItem icon={MapPin}>{personal.location}</ContactItem>
               <ContactItem icon={Linkedin}>{personal.linkedin}</ContactItem>
+              <ContactItem icon={Github}>{personal.github}</ContactItem>
+              <ContactItem icon={Globe}>{personal.portfolio}</ContactItem>
+              <ContactItem icon={Globe}>{personal.website}</ContactItem>
             </div>
           </div>
         </div>

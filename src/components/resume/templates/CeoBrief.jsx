@@ -278,6 +278,9 @@ const CeoBrief = ({ data }) => {
       { path: 'personal.phone', label: 'Phone', value: personal.phone },
       { path: 'personal.email', label: 'Email', value: personal.email },
       { path: 'personal.linkedin', label: 'LinkedIn', value: personal.linkedin },
+      { path: 'personal.github', label: 'GitHub', value: personal.github },
+      { path: 'personal.portfolio', label: 'Portfolio', value: personal.portfolio },
+      { path: 'personal.website', label: 'Website', value: personal.website },
     ].filter((item) => item.value);
 
     if (!items.length) return null;
