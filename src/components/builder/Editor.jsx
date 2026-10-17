@@ -25,6 +25,7 @@ import BuilderNavbar from './BuilderNavbar';
 import AIEnhanceModal from './AIEnhanceModal';
 import ATSScoreModal from './ATSScoreModal';
 import InterviewPrepModal from './InterviewPrepModal';
+import ResumeNextStepsModal from '../common/ResumeNextStepsModal';
 
 import { normalizeDocumentSettings } from '../resume/ResumePreview';
 import { mergeVolunteeringIntoExperience } from '../../utils/volunteeringExperience';
@@ -1628,6 +1629,7 @@ const Editor = ({
   const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
   const [editorTab, setEditorTab] = useState(() => getEditorTabForSection('personal', mode));
   const [isDownloadGateOpen, setIsDownloadGateOpen] = useState(false);
+  const [isNextStepsModalOpen, setIsNextStepsModalOpen] = useState(false);
   const [isCheckingPass, setIsCheckingPass] = useState(false);
   const pendingDownloadFnRef = useRef(null);
   const previewRef = useRef(null);
@@ -3479,6 +3481,10 @@ const contentHeight = exportRoot.scrollHeight;
           }
         },
       });
+      // Show next steps recommendation modal across ecosystem
+      setTimeout(() => {
+        setIsNextStepsModalOpen(true);
+      }, 700);
     } catch (error) {
       console.error('PDF export failed', error);
       setSmartActionMessage(
@@ -5103,6 +5109,15 @@ const contentHeight = exportRoot.scrollHeight;
                         <Save size={14} />
                         Save
                       </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsNextStepsModalOpen(true)}
+                        className="inline-flex h-9 items-center gap-1.5 rounded-[0.65rem] border border-[#B9964A]/40 bg-[#F7F8FA] px-3 text-[11px] font-extrabold text-[#8C6D23] transition-all hover:-translate-y-0.5 hover:border-[#B9964A] hover:bg-white hover:text-[#071426] shadow-xs"
+                        title="View recommended next career steps (ATS scan, Cover Letter, Career GPS)"
+                      >
+                        <Sparkles size={13} className="text-[#B9964A]" />
+                        Next Steps
+                      </button>
                       <div data-help-tour="canvas-tools" className="flex flex-wrap items-center gap-2">
                         <WorkspaceIconButton
                           icon={PencilLine}
@@ -5203,6 +5218,13 @@ const contentHeight = exportRoot.scrollHeight;
             pendingDownloadFnRef.current = null;
           }
         }}
+      />
+
+      <ResumeNextStepsModal
+        isOpen={isNextStepsModalOpen}
+        onClose={() => setIsNextStepsModalOpen(false)}
+        targetRole={resume?.personal?.title || ''}
+        candidateName={resume?.personal?.name || ''}
       />
     </div>
   );

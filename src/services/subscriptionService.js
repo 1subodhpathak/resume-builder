@@ -40,6 +40,7 @@ export const getSubscriptionStatus = async (clerkId, forceRefresh = false) => {
       plan: data.plan || 'free',
       tokensRemaining: typeof data.tokensRemaining === 'number' ? data.tokensRemaining : 30000,
       lifetimeTokens: data.lifetimeTokens || data.tokensRemaining || 30000,
+      hasSeenWelcomeModal: data.hasSeenWelcomeModal ?? false,
       tokenRenewalDate: data.tokenRenewalDate,
       planExpiresAt: data.planExpiresAt,
       billingCycle: data.billingCycle || 'monthly',
@@ -54,9 +55,26 @@ export const getSubscriptionStatus = async (clerkId, forceRefresh = false) => {
       plan: 'free',
       tokensRemaining: 30000,
       lifetimeTokens: 30000,
+      hasSeenWelcomeModal: true,
       status: 'active',
       isPaidPlan: false
     };
+  }
+};
+
+export const dismissWelcomeModal = async (clerkId) => {
+  if (!clerkId) return;
+  try {
+    await fetch(`${API_BASE}/careersense/subscription/dismiss-welcome-modal`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-clerk-user-id": clerkId
+      },
+      body: JSON.stringify({ clerkId })
+    });
+  } catch (err) {
+    console.warn('[dismissWelcomeModal error]:', err.message);
   }
 };
 

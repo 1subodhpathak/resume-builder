@@ -28,6 +28,7 @@ import Editor from './components/builder/Editor';
 import DataReview from './components/builder/DataReview';
 import ResumeRepository from './components/builder/ResumeRepository';
 import BuilderNavbar from './components/builder/BuilderNavbar';
+import WelcomeTokensModal from './components/common/WelcomeTokensModal';
 
 // --- LOGIC ---
 import {
@@ -449,6 +450,7 @@ const App = () => {
   return (
     <div className="theme-app-shell relative min-h-screen font-sans text-[#071426]">
       <AuthStoreSynchronizer />
+      <WelcomeTokensModal />
       {/* VIEW: LANDING */}
           {currentView === 'landing' && (
             <ResumeBuilderLanding
