@@ -97,6 +97,7 @@ const CareerLaunch = ({ data }) => {
 
   const COLUMN_CONTENT_HEIGHT = '274mm';
   const FOOTER_RESERVE = '7mm';
+  const SIDEBAR_FOOTER_RESERVE = '16mm';
 
   // ---------------------------------------------------------------------------
   // VISUAL TOKENS
@@ -128,6 +129,7 @@ const CareerLaunch = ({ data }) => {
 
   const sidebarFirstHeaderMeasureRef = useRef(null);
   const sidebarContinuationHeaderMeasureRef = useRef(null);
+  const sidebarContactMeasureRef = useRef(null);
 
   const mainHeightMeasureRef = useRef(null);
   const sidebarHeightMeasureRef = useRef(null);
@@ -588,7 +590,7 @@ const CareerLaunch = ({ data }) => {
   // ---------------------------------------------------------------------------
   // CONTACT BLOCK
   // ---------------------------------------------------------------------------
-  const SidebarContactBlock = ({ measurement = false }) => {
+  const SidebarContactBlock = ({ measurement = false, measureRef = null }) => {
     const items = [
       {
         path: 'personal.phone',
@@ -637,7 +639,7 @@ const CareerLaunch = ({ data }) => {
     if (!items.length) return null;
 
     return (
-      <div className="pb-[7mm]">
+      <div ref={measureRef} className="pb-[7mm]">
         <SidebarSectionTitle title="Let's Connect" />
 
         <div className="space-y-2.5">
@@ -893,7 +895,10 @@ const CareerLaunch = ({ data }) => {
 
             <div className="min-w-0 flex-1">
               {measurement ? (
-                <div className="text-[9.2px] font-black" style={{ color: INK }}>
+                <div
+                  className={`text-[9.2px] ${isAward ? 'font-semibold' : 'font-black'}`}
+                  style={{ color: INK }}
+                >
                   {item.name}
                 </div>
               ) : (
@@ -901,7 +906,7 @@ const CareerLaunch = ({ data }) => {
                   path={`${isAward ? 'awards' : 'certifications'}[${index}].name`}
                   label={isAward ? 'Award' : 'Certification'}
                   as="div"
-                  className="block text-[9.2px] font-black"
+                  className={`block text-[9.2px] ${isAward ? 'font-semibold' : 'font-black'}`}
                   style={{ color: INK }}
                 >
                   {item.name}
@@ -1279,6 +1284,9 @@ const CareerLaunch = ({ data }) => {
   );
 
   const paginate = useCallback(() => {
+    const sidebarContactHeight =
+      sidebarContactMeasureRef.current?.getBoundingClientRect().height || 0;
+
     const nextMainPages = paginateColumn({
       blocks: mainBlocks,
       blockRefs: mainMeasureRefs,
@@ -1298,7 +1306,7 @@ const CareerLaunch = ({ data }) => {
       continuationHeaderRef: sidebarContinuationHeaderMeasureRef,
       heightRef: sidebarHeightMeasureRef,
       footerReserveRef: sidebarFooterReserveMeasureRef,
-      extraFirstPageHeight: 0,
+      extraFirstPageHeight: sidebarContactHeight,
       mergeExperience: false,
     });
 
@@ -1345,6 +1353,7 @@ const CareerLaunch = ({ data }) => {
         mainContinuationHeaderMeasureRef.current,
         sidebarFirstHeaderMeasureRef.current,
         sidebarContinuationHeaderMeasureRef.current,
+        sidebarContactMeasureRef.current,
       ].forEach((node) => {
         if (node) observer.observe(node);
       });
@@ -1558,7 +1567,7 @@ const CareerLaunch = ({ data }) => {
 
           <div
             ref={sidebarFooterReserveMeasureRef}
-            style={{ width: '1mm', height: FOOTER_RESERVE }}
+            style={{ width: '1mm', height: SIDEBAR_FOOTER_RESERVE }}
           />
 
           <div
@@ -1575,7 +1584,10 @@ const CareerLaunch = ({ data }) => {
                 measurement
               />
 
-              <SidebarContactBlock measurement />
+              <SidebarContactBlock
+                measurement
+                measureRef={sidebarContactMeasureRef}
+              />
 
               <SidebarHeader
                 measureRef={sidebarContinuationHeaderMeasureRef}

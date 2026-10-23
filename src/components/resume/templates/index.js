@@ -110,6 +110,16 @@ export { default as Berlin } from './Berlin';
 export { default as Card } from './Card';
 export { default as ClassFileResume } from './ClassFileResume';
 export { default as Japanese } from './Japanese';
+export { default as IIT } from './IIT';
+export { default as IIM } from './IIM';
+export { default as BITS } from './BITS';
+export { default as XLRI } from './XLRI';
+export { default as MDIGurgaon } from './MDI Gurgaon';
+export { default as NMIMS } from './NMIMS';
+export { default as Banasthali } from './Banasthali';
+export { default as BHU } from './BHU';
+export { default as LPU } from './LPU';
+export { default as NIT } from './NIT';
 export { default as Luxe } from './Luxe';
 
 

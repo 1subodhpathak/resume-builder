@@ -31,8 +31,10 @@ const TrustItem = ({ icon: Icon, title, children }) => (
   </div>
 );
 
-export default function LandingFooterSection({ onOpenRepository, onStart, onViewTemplates }) {
-  const goTo = (sectionId) => scrollToLandingSection(sectionId);
+export default function LandingFooterSection({ onOpenRepository, onStart, onViewTemplates, onNavigateLandingSection }) {
+  const goTo = (sectionId) => onNavigateLandingSection
+    ? onNavigateLandingSection(sectionId)
+    : scrollToLandingSection(sectionId);
 
   return (
     <footer className="relative isolate mt-auto overflow-hidden border-t border-[#D8E0EA] bg-[#F8F7F3] text-[#071A31]">
@@ -108,6 +110,10 @@ export default function LandingFooterSection({ onOpenRepository, onStart, onView
             <div className="mt-5 flex flex-col gap-3">
               <FooterLink onClick={() => goTo('anatomy')}>Resume guide</FooterLink>
               <FooterLink onClick={() => goTo('examples')}>Resume examples</FooterLink>
+              <a href="/resume-examples" className="w-fit text-[12px] font-semibold text-[#5F7288] transition-colors hover:text-[#173A62]">Examples by job</a>
+              <a href="/student-resume-examples" className="w-fit text-[12px] font-semibold text-[#5F7288] transition-colors hover:text-[#173A62]">Student and fresher resumes</a>
+              <a href="/resume-templates" className="w-fit text-[12px] font-semibold text-[#5F7288] transition-colors hover:text-[#173A62]">Resume template library</a>
+              <a href="/resume-guides" className="w-fit text-[12px] font-semibold text-[#5F7288] transition-colors hover:text-[#173A62]">Resume writing guides</a>
               <FooterLink onClick={() => goTo('testimonials')}>Success stories</FooterLink>
               <FooterLink onClick={() => goTo('faq')}>Help and FAQ</FooterLink>
             </div>

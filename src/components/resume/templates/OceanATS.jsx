@@ -13,9 +13,12 @@ const OceanATS = ({ data }) => {
     personal = {},
     experience = [],
     education = [],
+    projects = [],
     skills = {},
     certifications = [],
     awards = [],
+    languages = [],
+    volunteering = [],
   } = data || {};
 
   const {
@@ -112,6 +115,22 @@ const OceanATS = ({ data }) => {
       });
     });
 
+    projects.forEach((item, index) => {
+      const chunks = chunkArray(getLines(item.desc), 4);
+
+      chunks.forEach((lines, chunkIndex) => {
+        next.push({
+          id: `project-${item.id || index}-${chunkIndex}`,
+          section: 'projects',
+          type: 'project',
+          item,
+          lines,
+          continuation: chunkIndex > 0,
+          forceBreak: Boolean(item.pageBreak && chunkIndex === 0),
+        });
+      });
+    });
+
     education.forEach((item, index) => {
       next.push({
         id: `education-${item.id || index}`,
@@ -142,6 +161,30 @@ const OceanATS = ({ data }) => {
       });
     });
 
+    if (languages.length) {
+      next.push({
+        id: 'languages',
+        section: 'additional',
+        type: 'languages',
+        items: languages,
+      });
+    }
+
+    volunteering.forEach((item, index) => {
+      const chunks = chunkArray(getLines(item.desc), 4);
+      chunks.forEach((lines, chunkIndex) => {
+        next.push({
+          id: `volunteering-${item.id || index}-${chunkIndex}`,
+          section: 'volunteering',
+          type: 'volunteering',
+          item,
+          lines,
+          continuation: chunkIndex > 0,
+          forceBreak: Boolean(item.pageBreak && chunkIndex === 0),
+        });
+      });
+    });
+
     return next;
   }, [
     allTechnical,
@@ -152,14 +195,19 @@ const OceanATS = ({ data }) => {
     experience,
     getLines,
     personal.summary,
+    projects,
     soft,
+    languages,
+    volunteering,
   ]);
 
   const SECTION_TITLES = {
     summary: 'Professional Summary',
     skills: 'Core Competencies',
     experience: 'Experience',
+    projects: 'Projects',
     education: 'Education',
+    volunteering: 'Leadership & Volunteering',
     additional: 'Additional Information',
   };
 
@@ -368,6 +416,43 @@ const OceanATS = ({ data }) => {
       );
     }
 
+    if (block.type === 'project') {
+      const item = block.item;
+
+      return (
+        <div className="pb-4">
+          <div className="flex items-baseline justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <h4 className="text-[9.5px] font-bold text-slate-900">
+                {item.name || 'Project'}
+                {block.continuation ? (
+                  <span className="ml-1 text-[7.5px] font-normal italic text-slate-400">
+                    continued
+                  </span>
+                ) : null}
+              </h4>
+            </div>
+
+            {!block.continuation && item.date ? (
+              <span className="shrink-0 text-[8.5px] font-bold text-slate-500">
+                {item.date}
+              </span>
+            ) : null}
+          </div>
+
+          {block.lines.length ? (
+            <ul className="mt-1.5 ml-4 list-disc space-y-0.5 text-[9px] leading-[1.42] text-slate-700">
+              {block.lines.map((line, index) => (
+                <li key={`${block.id}-${measurement ? 'measure-' : ''}${index}`}>
+                  {line}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      );
+    }
+
     if (block.type === 'certification') {
       const item = block.item;
 
@@ -394,6 +479,38 @@ const OceanATS = ({ data }) => {
           {item.name}
           {item.issuer ? ` — ${item.issuer}` : ''}
           {item.date ? ` (${item.date})` : ''}
+        </div>
+      );
+    }
+
+    if (block.type === 'languages') {
+      return (
+        <div className="pb-3 text-[9px] leading-[1.5] text-slate-700">
+          <strong className="text-slate-900">Languages:</strong>{' '}
+          {block.items.map((item) =>
+            typeof item === 'string'
+              ? item
+              : [item?.name, item?.level].filter(Boolean).join(' — ')
+          ).filter(Boolean).join(', ')}
+        </div>
+      );
+    }
+
+    if (block.type === 'volunteering') {
+      const item = block.item;
+      return (
+        <div className="pb-4">
+          <div className="flex items-baseline justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <h4 className="text-[9.5px] font-bold text-slate-900">
+                {item.role || item.name || 'Volunteer Experience'}
+                {block.continuation ? <span className="ml-1 text-[7.5px] font-normal italic text-slate-400">continued</span> : null}
+              </h4>
+              {!block.continuation && item.org ? <div className="mt-0.5 text-[8.5px] font-bold" style={{ color: BLUE_ACCENT }}>{item.org}</div> : null}
+            </div>
+            {!block.continuation && item.date ? <span className="shrink-0 text-[8.5px] font-bold text-slate-500">{item.date}</span> : null}
+          </div>
+          {block.lines.length ? <ul className="mt-1.5 ml-4 list-disc space-y-0.5 text-[9px] leading-[1.42] text-slate-700">{block.lines.map((line, index) => <li key={`${block.id}-${index}`}>{line}</li>)}</ul> : null}
         </div>
       );
     }

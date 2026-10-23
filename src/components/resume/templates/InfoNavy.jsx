@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import {
   Globe,
   Github,
@@ -264,24 +264,73 @@ const InfoNavy = ({ data }) => {
     </header>
   );
 
-  const PageShell = ({ children, page, last = false }) => (
-    <section
-      className="relative mx-auto h-[297mm] w-[210mm] overflow-hidden"
-      style={{
-        boxSizing: 'border-box',
-        padding: '9mm 10mm 11mm',
-        backgroundColor: PAPER,
-        breakAfter: last ? 'auto' : 'page',
-        pageBreakAfter: last ? 'auto' : 'always',
-      }}
-    >
-      {children}
-      <footer className="absolute bottom-[4mm] left-[10mm] right-[10mm] flex items-center justify-between border-t pt-1.5 text-[5.8px] font-black uppercase tracking-[0.1em]" style={{ borderColor: BORDER, color: MUTED }}>
-        <span style={{ color: TEAL }}>Confidential</span>
-        <span>Page {page}{showPageTwo ? ' / 2' : ' / 1'}</span>
-      </footer>
-    </section>
-  );
+  const PageShell = ({ children, page, last = false }) => {
+    const shellRef = useRef(null);
+    const contentRef = useRef(null);
+    const footerRef = useRef(null);
+    const [contentScale, setContentScale] = useState(1);
+
+    useLayoutEffect(() => {
+      let frame = 0;
+      const fitContent = () => {
+        window.cancelAnimationFrame(frame);
+        frame = window.requestAnimationFrame(() => {
+          const content = contentRef.current;
+          const footer = footerRef.current;
+          if (!content || !footer) return;
+
+          const availableHeight = Math.max(0, footer.offsetTop - content.offsetTop - 10);
+          const naturalHeight = content.scrollHeight;
+          const nextScale = naturalHeight > availableHeight
+            ? availableHeight / naturalHeight
+            : 1;
+          setContentScale((current) => Math.abs(current - nextScale) > 0.002 ? nextScale : current);
+        });
+      };
+
+      fitContent();
+      document.fonts?.ready?.then(fitContent).catch(() => {});
+      const observer = typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(fitContent)
+        : null;
+      if (contentRef.current) observer?.observe(contentRef.current);
+      window.addEventListener('resize', fitContent);
+
+      return () => {
+        window.cancelAnimationFrame(frame);
+        observer?.disconnect();
+        window.removeEventListener('resize', fitContent);
+      };
+    }, [children]);
+
+    return (
+      <section
+        ref={shellRef}
+        className="relative mx-auto h-[297mm] w-[210mm] overflow-hidden"
+        style={{
+          boxSizing: 'border-box',
+          padding: '9mm 10mm 11mm',
+          backgroundColor: PAPER,
+          breakAfter: last ? 'auto' : 'page',
+          pageBreakAfter: last ? 'auto' : 'always',
+        }}
+      >
+        <div
+          ref={contentRef}
+          style={{
+            transform: `scale(${contentScale})`,
+            transformOrigin: 'top left',
+          }}
+        >
+          {children}
+        </div>
+        <footer ref={footerRef} className="absolute bottom-[4mm] left-[10mm] right-[10mm] flex items-center justify-between border-t pt-1.5 text-[5.8px] font-black uppercase tracking-[0.1em]" style={{ borderColor: BORDER, color: MUTED }}>
+          <span style={{ color: TEAL }}>Confidential</span>
+          <span>Page {page}{showPageTwo ? ' / 2' : ' / 1'}</span>
+        </footer>
+      </section>
+    );
+  };
 
   return (
     <div className="resume-preview-wrapper mx-auto w-full max-w-[210mm] bg-slate-200 print:bg-white" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>

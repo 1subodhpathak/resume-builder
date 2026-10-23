@@ -63,7 +63,8 @@ const Tech = ({ data }) => {
   const MAIN_WIDTH = '121mm';
   const SIDE_WIDTH = '59mm';
   const GAP = '8mm';
-  const CONTENT_HEIGHT = '276mm';
+  // Keep content clear of the footer in both preview and PDF rendering.
+  const CONTENT_HEIGHT = '264mm';
   const FOOTER_RESERVE = '6mm';
 
   const mainMeasureRefs = useRef({});

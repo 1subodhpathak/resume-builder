@@ -1147,17 +1147,23 @@ const ResumeScorePanel = ({ score = 0, label = 'Needs Work', breakdown = [], tip
   );
 };
 
-const Input = ({ label, value, onChange, placeholder }) => (
+const Input = ({ label, value, onChange, placeholder, required = false }) => {
+  const isMissing = required && !String(value || '').trim();
+  return (
   <div className="mb-4">
-    <label className="mb-2 block text-[12px] font-semibold leading-none text-[#40556D]">{label}</label>
+    <label className={`mb-2 block text-[12px] font-semibold leading-none ${isMissing ? 'text-[#A14B32]' : 'text-[#40556D]'}`}>
+      {label}
+    </label>
     <input
       value={value || ''}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="min-h-11 w-full rounded-[0.72rem] border border-[#D6E0EA] bg-white px-3.5 py-2.5 text-[14px] font-medium leading-5 text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-[border-color,box-shadow,background-color] placeholder:text-[#97A6B7] hover:border-[#C7D3DF] focus:border-[#C49A43] focus:bg-white focus:ring-4 focus:ring-[#C49A43]/10"
+      aria-invalid={isMissing}
+      className={`min-h-11 w-full rounded-[0.72rem] border px-3.5 py-2.5 text-[14px] font-medium leading-5 text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-[border-color,box-shadow,background-color] placeholder:text-[#97A6B7] focus:ring-4 ${isMissing ? 'border-[#D8896F] bg-[#FFF8F5] hover:border-[#C96E50] focus:border-[#C96E50] focus:ring-[#C96E50]/10' : 'border-[#D6E0EA] bg-white hover:border-[#C7D3DF] focus:border-[#C49A43] focus:bg-white focus:ring-[#C49A43]/10'}`}
     />
   </div>
-);
+  );
+};
 
 const SpacingControl = ({
   label,
@@ -1353,7 +1359,9 @@ const TextArea = ({
   placeholder,
   formattingEnabled = false,
   formattingDefault = LIST_MODES.PLAIN,
+  required = false,
 }) => {
+  const isMissing = required && !String(value || '').trim();
   const [listMode, setListMode] = useLongTextListMode(value, formattingDefault);
 
   const handleModeChange = (nextMode) => {
@@ -1409,7 +1417,7 @@ const TextArea = ({
   return (
     <div className="mb-4">
       <div className="mb-1.5 flex flex-wrap items-end justify-between gap-3">
-        <label className="block text-[12px] font-semibold text-[#40556D]">{label}</label>
+        <label className={`block text-[12px] font-semibold ${isMissing ? 'text-[#A14B32]' : 'text-[#40556D]'}`}>{label}</label>
         {formattingEnabled ? <ListModePicker mode={listMode} onChange={handleModeChange} /> : null}
       </div>
       <textarea
@@ -1417,7 +1425,8 @@ const TextArea = ({
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder={formattingEnabled ? getModePlaceholder(listMode, placeholder) : placeholder}
-        className="h-24 w-full resize-none rounded-[0.72rem] border border-[#D6E0EA] bg-white px-3.5 py-3 text-[14px] font-medium leading-6 text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-all custom-scrollbar placeholder:text-[#97A6B7] hover:border-[#C7D3DF] focus:border-[#C49A43] focus:bg-white focus:ring-4 focus:ring-[#C49A43]/10"
+        aria-invalid={isMissing}
+        className={`h-24 w-full resize-none rounded-[0.72rem] border px-3.5 py-3 text-[14px] font-medium leading-6 text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-all custom-scrollbar placeholder:text-[#97A6B7] focus:ring-4 ${isMissing ? 'border-[#D8896F] bg-[#FFF8F5] hover:border-[#C96E50] focus:border-[#C96E50] focus:ring-[#C96E50]/10' : 'border-[#D6E0EA] bg-white hover:border-[#C7D3DF] focus:border-[#C49A43] focus:bg-white focus:ring-[#C49A43]/10'}`}
       />
     </div>
   );
@@ -1445,7 +1454,9 @@ const SkillAutocompleteTextArea = ({
   onChange,
   selectedSkills = [],
   placeholder,
+  required = false,
 }) => {
+  const isMissing = required && !String(value || '').trim() && !selectedSkills.length;
   const [isFocused, setIsFocused] = useState(false);
   const activeToken = getSkillToken(value || '');
   const suggestions = useMemo(
@@ -1467,7 +1478,7 @@ const SkillAutocompleteTextArea = ({
 
   return (
     <div className="relative mb-4">
-      <label className="mb-2 block text-[12px] font-semibold text-[#40556D]">{label}</label>
+      <label className={`mb-2 block text-[12px] font-semibold ${isMissing ? 'text-[#A14B32]' : 'text-[#40556D]'}`}>{label}</label>
       <textarea
         value={value || ''}
         onChange={(event) => onChange(event.target.value)}
@@ -1477,7 +1488,8 @@ const SkillAutocompleteTextArea = ({
         }}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="h-24 w-full resize-none rounded-[0.72rem] border border-[#D6E0EA] bg-white px-3.5 py-3 text-[14px] font-medium leading-6 text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-all custom-scrollbar placeholder:text-[#97A6B7] hover:border-[#C7D3DF] focus:border-[#C49A43] focus:bg-white focus:ring-4 focus:ring-[#C49A43]/10"
+        aria-invalid={isMissing}
+        className={`h-24 w-full resize-none rounded-[0.72rem] border px-3.5 py-3 text-[14px] font-medium leading-6 text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-all custom-scrollbar placeholder:text-[#97A6B7] focus:ring-4 ${isMissing ? 'border-[#D8896F] bg-[#FFF8F5] hover:border-[#C96E50] focus:border-[#C96E50] focus:ring-[#C96E50]/10' : 'border-[#D6E0EA] bg-white hover:border-[#C7D3DF] focus:border-[#C49A43] focus:bg-white focus:ring-[#C49A43]/10'}`}
       />
       {showSuggestions ? (
         <div className="absolute left-0 right-0 top-full z-30 mt-2 max-h-56 overflow-y-auto rounded-xl border border-[#E1E7EF] bg-white p-2 shadow-xl shadow-[#071426]/10">
@@ -1517,7 +1529,9 @@ const AIEnhanceableTextArea = ({
   onEnhanceClick,
   formattingEnabled = false,
   formattingDefault = LIST_MODES.PLAIN,
+  required = false,
 }) => {
+  const isMissing = required && !String(value || '').trim();
   const [listMode, setListMode] = useLongTextListMode(value, formattingDefault);
 
   const handleModeChange = (nextMode) => {
@@ -1573,7 +1587,7 @@ const AIEnhanceableTextArea = ({
   return (
     <div className="group relative mb-4">
       <div className="mb-2 flex flex-wrap items-end justify-between gap-2">
-        <label className="block text-[12px] font-semibold leading-none text-[#40556D]">{label}</label>
+        <label className={`block text-[12px] font-semibold leading-none ${isMissing ? 'text-[#A14B32]' : 'text-[#40556D]'}`}>{label}</label>
         <div className="flex flex-wrap items-center justify-end gap-2">
           {formattingEnabled ? <ListModePicker mode={listMode} onChange={handleModeChange} /> : null}
           {value && value.length > 10 && (
@@ -1593,7 +1607,8 @@ const AIEnhanceableTextArea = ({
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder={formattingEnabled ? getModePlaceholder(listMode, placeholder || 'Describe your work...') : placeholder}
-        className="h-32 w-full resize-none rounded-[0.72rem] border border-[#D6E0EA] bg-white px-3.5 py-3 text-[14px] font-medium leading-6 text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-[border-color,box-shadow,background-color] custom-scrollbar placeholder:text-[#97A6B7] hover:border-[#C7D3DF] focus:border-[#C49A43] focus:bg-white focus:ring-4 focus:ring-[#C49A43]/10"
+        aria-invalid={isMissing}
+        className={`h-32 w-full resize-none rounded-[0.72rem] border px-3.5 py-3 text-[14px] font-medium leading-6 text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-[border-color,box-shadow,background-color] custom-scrollbar placeholder:text-[#97A6B7] focus:ring-4 ${isMissing ? 'border-[#D8896F] bg-[#FFF8F5] hover:border-[#C96E50] focus:border-[#C96E50] focus:ring-[#C96E50]/10' : 'border-[#D6E0EA] bg-white hover:border-[#C7D3DF] focus:border-[#C49A43] focus:bg-white focus:ring-[#C49A43]/10'}`}
       />
     </div>
   );
@@ -4689,15 +4704,15 @@ const contentHeight = exportRoot.scrollHeight;
                   <div className="border-b border-[#D8E2EC] pb-2.5 text-xs font-extrabold uppercase tracking-[0.16em] text-[#123B6D]">
                     Personal Variables
                   </div>
-                  <Input label="Full Name" value={resume.personal.name} onChange={(v) => handlePersonalChange('name', v)} />
-                  <Input label="Job Title" value={resume.personal.title} onChange={(v) => handlePersonalChange('title', v)} />
-                  <Input label="Email" value={resume.personal.email} onChange={(v) => handlePersonalChange('email', v)} />
-                  <Input label="Phone" value={resume.personal.phone} onChange={(v) => handlePersonalChange('phone', v)} />
-                  <Input label="LinkedIn" value={resume.personal.linkedin} onChange={(v) => handlePersonalChange('linkedin', v)} />
-                  <Input label="GitHub" value={resume.personal.github} onChange={(v) => handlePersonalChange('github', v)} />
-                  <Input label="Portfolio" value={resume.personal.portfolio} onChange={(v) => handlePersonalChange('portfolio', v)} />
-                  <Input label="Website" value={resume.personal.website} onChange={(v) => handlePersonalChange('website', v)} />
-                  <Input label="Location" value={resume.personal.location} onChange={(v) => handlePersonalChange('location', v)} />
+                  <Input required label="Full Name" value={resume.personal.name} onChange={(v) => handlePersonalChange('name', v)} />
+                  <Input required label="Job Title" value={resume.personal.title} onChange={(v) => handlePersonalChange('title', v)} />
+                  <Input required label="Email" value={resume.personal.email} onChange={(v) => handlePersonalChange('email', v)} />
+                  <Input required label="Phone" value={resume.personal.phone} onChange={(v) => handlePersonalChange('phone', v)} />
+                  <Input required label="LinkedIn" value={resume.personal.linkedin} onChange={(v) => handlePersonalChange('linkedin', v)} />
+                  <Input required label="GitHub" value={resume.personal.github} onChange={(v) => handlePersonalChange('github', v)} />
+                  <Input required label="Portfolio" value={resume.personal.portfolio} onChange={(v) => handlePersonalChange('portfolio', v)} />
+                  <Input required label="Website" value={resume.personal.website} onChange={(v) => handlePersonalChange('website', v)} />
+                  <Input required label="Location" value={resume.personal.location} onChange={(v) => handlePersonalChange('location', v)} />
                   <AIEnhanceableTextArea
                     label="Professional Summary"
                     value={resume.personal.summary}
@@ -4705,6 +4720,7 @@ const contentHeight = exportRoot.scrollHeight;
                     formattingEnabled
                     formattingDefault={LIST_MODES.PLAIN}
                     placeholder="Write a paragraph or use separate lines if you prefer."
+                    required
                     onEnhanceClick={() => openAIModal(
                       resume.personal.summary,
                       "Professional Summary",
@@ -4762,6 +4778,7 @@ const contentHeight = exportRoot.scrollHeight;
                     onChange={(v) => handleSkillsChange('technical', v)}
                     selectedSkills={resume.skills.technical}
                     placeholder="Type skills separated by commas"
+                    required
                   />
                   {resume.skills.technical.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
@@ -4802,6 +4819,7 @@ const contentHeight = exportRoot.scrollHeight;
                     onChange={(v) => handleSkillsChange('core', v)}
                     selectedSkills={resume.skills.core}
                     placeholder="Type skills separated by commas"
+                    required
                   />
                   {resume.skills.core.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
@@ -4883,11 +4901,11 @@ const contentHeight = exportRoot.scrollHeight;
                               </button>
                             ) : null}
                           </div>
-                          <Input label="Role" value={item.role} onChange={(v) => updateListItem('experience', item.id, 'role', v)} />
-                          <Input label="Company" value={item.company} onChange={(v) => updateListItem('experience', item.id, 'company', v)} />
-                          <Input label="Location" value={item.location} onChange={(v) => updateListItem('experience', item.id, 'location', v)} />
-                          <Input label="Employment Type" value={item.employmentType} onChange={(v) => updateListItem('experience', item.id, 'employmentType', v)} />
-                          <Input label="Date" value={item.date} onChange={(v) => updateListItem('experience', item.id, 'date', v)} />
+                          <Input required label="Role" value={item.role} onChange={(v) => updateListItem('experience', item.id, 'role', v)} />
+                          <Input required label="Company" value={item.company} onChange={(v) => updateListItem('experience', item.id, 'company', v)} />
+                          <Input required label="Location" value={item.location} onChange={(v) => updateListItem('experience', item.id, 'location', v)} />
+                          <Input required label="Employment Type" value={item.employmentType} onChange={(v) => updateListItem('experience', item.id, 'employmentType', v)} />
+                          <Input required label="Date" value={item.date} onChange={(v) => updateListItem('experience', item.id, 'date', v)} />
                           <AIEnhanceableTextArea
                             label="Description"
                             value={item.desc}
@@ -4895,6 +4913,7 @@ const contentHeight = exportRoot.scrollHeight;
                             formattingEnabled
                             formattingDefault={LIST_MODES.BULLET}
                             placeholder="Add achievements as bullets, numbers, or plain lines."
+                            required
                             onEnhanceClick={() => openAIModal(
                               item.desc,
                               "Work Experience Bullet Points",
@@ -4936,13 +4955,13 @@ const contentHeight = exportRoot.scrollHeight;
                         </>
                       )}
 
-                      {activeSection === 'education' && (<><Input label="School" value={item.school} onChange={(v) => updateListItem('education', item.id, 'school', v)} /><Input label="Degree" value={item.degree} onChange={(v) => updateListItem('education', item.id, 'degree', v)} /><Input label="Specialization" value={item.specialization} onChange={(v) => updateListItem('education', item.id, 'specialization', v)} /><Input label="Grade / GPA / Percentage" value={item.grade} onChange={(v) => updateListItem('education', item.id, 'grade', v)} /><Input label="Date" value={item.date} onChange={(v) => updateListItem('education', item.id, 'date', v)} /></>)}
+                      {activeSection === 'education' && (<><Input required label="School" value={item.school} onChange={(v) => updateListItem('education', item.id, 'school', v)} /><Input required label="Degree" value={item.degree} onChange={(v) => updateListItem('education', item.id, 'degree', v)} /><Input required label="Specialization" value={item.specialization} onChange={(v) => updateListItem('education', item.id, 'specialization', v)} /><Input required label="Grade / GPA / Percentage" value={item.grade || item.cgpa || item.gpa || item.percentage} onChange={(v) => updateListItem('education', item.id, 'grade', v)} /><Input required label="Date" value={item.date} onChange={(v) => updateListItem('education', item.id, 'date', v)} /></>)}
 
                       {activeSection === 'projects' && (
                         <>
-                          <Input label="Project Name" value={item.name} onChange={(v) => updateListItem('projects', item.id, 'name', v)} />
-                          <Input label="Project Link" value={item.url} onChange={(v) => updateListItem('projects', item.id, 'url', v)} />
-                          <Input label="Repository Link" value={item.repositoryUrl} onChange={(v) => updateListItem('projects', item.id, 'repositoryUrl', v)} />
+                          <Input required label="Project Name" value={item.name} onChange={(v) => updateListItem('projects', item.id, 'name', v)} />
+                          <Input required label="Project Link" value={item.url || item.projectLink} onChange={(v) => updateListItem('projects', item.id, 'url', v)} />
+                          <Input required label="Repository Link" value={item.repositoryUrl || item.repositoryLink} onChange={(v) => updateListItem('projects', item.id, 'repositoryUrl', v)} />
                           <AIEnhanceableTextArea
                             label="Project Description"
                             value={item.desc}
@@ -4950,6 +4969,7 @@ const contentHeight = exportRoot.scrollHeight;
                             formattingEnabled
                             formattingDefault={LIST_MODES.PLAIN}
                             placeholder="Describe the project in a paragraph or switch to bullets or numbers."
+                            required
                             onEnhanceClick={() => openAIModal(
                               item.desc,
                               "Project Details",
@@ -4963,9 +4983,9 @@ const contentHeight = exportRoot.scrollHeight;
                         </>
                       )}
 
-                      {activeSection === 'awards' && (<><Input label="Award Name" value={item.name} onChange={(v) => updateListItem('awards', item.id, 'name', v)} /><Input label="Issuer" value={item.issuer} onChange={(v) => updateListItem('awards', item.id, 'issuer', v)} /><Input label="Date" value={item.date} onChange={(v) => updateListItem('awards', item.id, 'date', v)} /></>)}
-                      {activeSection === 'certifications' && (<><Input label="Certificate Name" value={item.name} onChange={(v) => updateListItem('certifications', item.id, 'name', v)} /><Input label="Issuer" value={item.issuer} onChange={(v) => updateListItem('certifications', item.id, 'issuer', v)} /><Input label="Issue Date" value={item.date} onChange={(v) => updateListItem('certifications', item.id, 'date', v)} /><Input label="Expiry Date" value={item.expiryDate} onChange={(v) => updateListItem('certifications', item.id, 'expiryDate', v)} /><Input label="Credential ID" value={item.credentialId} onChange={(v) => updateListItem('certifications', item.id, 'credentialId', v)} /><Input label="Credential URL" value={item.credentialUrl} onChange={(v) => updateListItem('certifications', item.id, 'credentialUrl', v)} /></>)}
-                      {activeSection === 'languages' && (<div className="grid grid-cols-1 gap-4 sm:grid-cols-2"><Input label="Language" value={item.name} onChange={(v) => updateListItem('languages', item.id, 'name', v)} /><Input label="Level" value={item.level} onChange={(v) => updateListItem('languages', item.id, 'level', v)} /></div>)}
+                      {activeSection === 'awards' && (<><Input required label="Award Name" value={item.name} onChange={(v) => updateListItem('awards', item.id, 'name', v)} /><Input required label="Issuer" value={item.issuer} onChange={(v) => updateListItem('awards', item.id, 'issuer', v)} /><Input required label="Date" value={item.date} onChange={(v) => updateListItem('awards', item.id, 'date', v)} /></>)}
+                      {activeSection === 'certifications' && (<><Input required label="Certificate Name" value={item.name} onChange={(v) => updateListItem('certifications', item.id, 'name', v)} /><Input required label="Issuer" value={item.issuer} onChange={(v) => updateListItem('certifications', item.id, 'issuer', v)} /><Input required label="Issue Date" value={item.date} onChange={(v) => updateListItem('certifications', item.id, 'date', v)} /><Input label="Expiry Date" value={item.expiryDate} onChange={(v) => updateListItem('certifications', item.id, 'expiryDate', v)} /><Input label="Credential ID" value={item.credentialId} onChange={(v) => updateListItem('certifications', item.id, 'credentialId', v)} /><Input label="Credential URL" value={item.credentialUrl} onChange={(v) => updateListItem('certifications', item.id, 'credentialUrl', v)} /></>)}
+                      {activeSection === 'languages' && (<div className="grid grid-cols-1 gap-4 sm:grid-cols-2"><Input required label="Language" value={item.name} onChange={(v) => updateListItem('languages', item.id, 'name', v)} /><Input required label="Level" value={item.level} onChange={(v) => updateListItem('languages', item.id, 'level', v)} /></div>)}
                     </div>
                   ))}
                   {SHOW_SECTION_LAYOUT_SPACING && activeSection === 'experience' && (

@@ -19,6 +19,16 @@ const ROLE_EXAMPLES = [
   ['chef', 'Chef', 'chef-menu', ['Menu Development', 'Kitchen Operations', 'Food Safety', 'Team Leadership'], ['Executive Chef', 'Sous Chef', 'Chef de Partie', 'Commis Chef']],
   ['student', 'Student', 'student-notes', ['Research', 'Presentations', 'Teamwork', 'Microsoft Office'], ['Student Project Lead', 'Research Assistant', 'Campus Volunteer', 'Student Intern']],
   ['executive', 'Executive', 'executive', ['Business Strategy', 'P&L Management', 'Leadership', 'Transformation'], ['Chief Operating Officer', 'Vice President', 'Senior Director', 'Director']],
+  ['business-analyst', 'Business Analyst', 'business-analyst', ['Requirements Gathering', 'SQL', 'Process Mapping', 'Stakeholder Management'], ['Lead Business Analyst', 'Senior Business Analyst', 'Business Analyst', 'Junior Business Analyst']],
+  ['chartered-accountant', 'Chartered Accountant', 'chartered-accountant', ['Financial Reporting', 'Taxation', 'Audit', 'Risk Management'], ['Finance Controller', 'Senior Chartered Accountant', 'Audit Associate', 'Article Assistant']],
+  ['frontend-developer', 'Frontend Developer', 'developer', ['JavaScript', 'React', 'CSS', 'Web Performance'], ['Frontend Lead', 'Senior Frontend Developer', 'Frontend Developer', 'Web Development Intern']],
+  ['marketing-manager', 'Marketing Manager', 'marketing', ['Campaign Strategy', 'Analytics', 'Content Marketing', 'Brand Management'], ['Marketing Director', 'Senior Marketing Manager', 'Marketing Manager', 'Marketing Executive']],
+  ['human-resources', 'Human Resources Professional', 'professional-columns', ['Talent Acquisition', 'Employee Relations', 'HRIS', 'Performance Management'], ['HR Director', 'HR Business Partner', 'HR Generalist', 'HR Coordinator']],
+  ['civil-engineer', 'Civil Engineer', 'engineer', ['AutoCAD', 'Project Planning', 'Quantity Surveying', 'Site Management'], ['Project Engineering Lead', 'Senior Civil Engineer', 'Site Engineer', 'Graduate Engineer']],
+  ['financial-analyst', 'Financial Analyst', 'accounting', ['Financial Modeling', 'Excel', 'Forecasting', 'Valuation'], ['Finance Manager', 'Senior Financial Analyst', 'Financial Analyst', 'Finance Intern']],
+  ['consultant', 'Management Consultant', 'consulting-line', ['Strategy', 'Market Analysis', 'Problem Solving', 'Client Management'], ['Engagement Manager', 'Senior Consultant', 'Consultant', 'Business Analyst']],
+  ['operations-manager', 'Operations Manager', 'professional', ['Process Improvement', 'Supply Chain', 'Team Leadership', 'KPI Management'], ['Operations Director', 'Senior Operations Manager', 'Operations Manager', 'Operations Analyst']],
+  ['career-change', 'Career Change', 'career-launch', ['Transferable Skills', 'Relevant Projects', 'Adaptability', 'Industry Knowledge'], ['Target-Role Project Lead', 'Cross-Functional Contributor', 'Previous-Industry Specialist', 'Career Transition Candidate']],
 ];
 
 const COMPANY_NAMES = ['Northstar Group', 'Meridian Partners', 'Brightline Systems', 'LaunchPoint Labs'];
@@ -29,6 +39,8 @@ const toTitle = (role) => `${role} Resume Template and Example`;
 export const RESUME_EXAMPLE_ROLES = ROLE_EXAMPLES.map(
   ([slug, role, templateId, skills, experienceRoles]) => ({
     slug,
+    path: `/resume-examples/${slug}`,
+    family: 'role',
     role,
     templateId,
     seoTitle: `${toTitle(role)} | CareerSense`,
@@ -38,17 +50,80 @@ export const RESUME_EXAMPLE_ROLES = ROLE_EXAMPLES.map(
   })
 );
 
+const STUDENT_EXAMPLES = [
+  ['iit-resume', 'IIT Student', 'iit', ['Engineering Projects', 'Technical Skills', 'Research', 'Leadership'], ['Technical Project Lead', 'Research Intern', 'Student Coordinator', 'Engineering Student'], 'Create an IIT resume that presents technical projects, internships, positions of responsibility, education, and measurable achievements in a concise campus-ready format.'],
+  ['iim-resume', 'IIM Student', 'iim', ['Case Analysis', 'Strategy', 'Financial Modeling', 'Leadership'], ['Consulting Project Lead', 'Management Intern', 'Student Committee Lead', 'MBA Candidate'], 'Build an IIM resume with impact-focused bullets for internships, live projects, case competitions, leadership, and academic distinctions.'],
+  ['nit-resume', 'NIT Student', 'nit', ['Engineering Design', 'Programming', 'Core Technical Skills', 'Teamwork'], ['Engineering Project Lead', 'Technical Intern', 'Club Coordinator', 'Undergraduate Student'], 'Use an NIT resume format designed to highlight engineering projects, internships, technical skills, campus leadership, and academic performance.'],
+  ['bits-pilani-resume', 'BITS Pilani Student', 'bits', ['Practice School', 'Product Development', 'Research', 'Problem Solving'], ['Practice School Intern', 'Project Lead', 'Research Assistant', 'Undergraduate Student'], 'Create a BITS Pilani resume that clearly presents Practice School experience, technical projects, research, coursework, and campus achievements.'],
+  ['xlri-resume', 'XLRI Student', 'xlri', ['Human Resources', 'Business Strategy', 'Analytics', 'Leadership'], ['Business Project Lead', 'Management Intern', 'Committee Coordinator', 'Management Student'], 'Build an XLRI resume for consulting, HR, finance, marketing, or general management opportunities with concise, outcome-led experience bullets.'],
+  ['mdi-gurgaon-resume', 'MDI Gurgaon Student', 'mdi-gurgaon', ['Business Analysis', 'Market Research', 'Strategy', 'Stakeholder Management'], ['Live Project Lead', 'Summer Intern', 'Student Coordinator', 'MBA Candidate'], 'Create an MDI Gurgaon resume that prioritizes summer internships, live projects, competitions, leadership roles, and measurable business outcomes.'],
+  ['nmims-resume', 'NMIMS Student', 'nmims', ['Business Research', 'Financial Analysis', 'Marketing', 'Presentations'], ['Business Project Lead', 'Management Intern', 'Committee Member', 'Management Student'], 'Use an NMIMS resume format for internships and placements, with space for projects, certifications, leadership, academics, and role-relevant skills.'],
+  ['bhu-resume', 'BHU Student', 'bhu', ['Academic Research', 'Subject Knowledge', 'Projects', 'Communication'], ['Research Project Lead', 'Academic Intern', 'Society Coordinator', 'University Student'], 'Create a BHU student resume that balances education, research, internships, projects, extracurricular work, and professional skills.'],
+  ['lpu-resume', 'LPU Student', 'lpu', ['Applied Projects', 'Industry Tools', 'Internships', 'Communication'], ['Capstone Project Lead', 'Industry Intern', 'Campus Volunteer', 'University Student'], 'Build an LPU resume for placements or internships using clear sections for projects, industry exposure, certifications, technical skills, and achievements.'],
+  ['banasthali-resume', 'Banasthali Student', 'banasthali', ['Academic Projects', 'Research', 'Leadership', 'Digital Skills'], ['Project Team Lead', 'Research Intern', 'Student Coordinator', 'University Student'], 'Create a Banasthali student resume with a structured presentation of academics, internships, projects, leadership, skills, and extracurricular achievements.'],
+  ['college-student-resume', 'College Student', 'student-notes', ['Coursework', 'Projects', 'Teamwork', 'Communication'], ['Student Project Lead', 'Research Assistant', 'Campus Volunteer', 'College Student'], 'Build a college student resume that turns coursework, projects, volunteering, clubs, and part-time work into evidence of job-ready skills.'],
+  ['fresher-resume', 'Fresher', 'career-launch', ['Projects', 'Technical Skills', 'Communication', 'Problem Solving'], ['Graduate Project Lead', 'Intern', 'Campus Coordinator', 'Recent Graduate'], 'Create a fresher resume for jobs in India with a strong objective, relevant skills, internships, projects, certifications, and education.'],
+  ['internship-resume', 'Internship Candidate', 'associate-prime', ['Relevant Coursework', 'Projects', 'Research', 'Teamwork'], ['Student Project Lead', 'Volunteer', 'Club Member', 'Internship Candidate'], 'Build an internship resume that connects coursework, projects, campus involvement, and transferable skills to the opportunity you are targeting.'],
+  ['final-year-student-resume', 'Final-Year Student', 'Academic', ['Capstone Project', 'Industry Tools', 'Research', 'Presentations'], ['Capstone Project Lead', 'Industry Intern', 'Student Mentor', 'Final-Year Student'], 'Create a final-year student resume for placements with a focused summary, capstone work, internships, certifications, skills, and leadership.'],
+  ['resume-with-no-experience', 'Student With No Experience', 'career-launch', ['Academic Projects', 'Volunteering', 'Transferable Skills', 'Coursework'], ['Academic Project Lead', 'Campus Volunteer', 'Society Member', 'Student'], 'Make a resume with no formal work experience by presenting projects, coursework, volunteering, activities, and transferable skills as credible evidence.'],
+];
+
+export const STUDENT_RESUME_EXAMPLES = STUDENT_EXAMPLES.map(
+  ([slug, role, templateId, skills, experienceRoles, description]) => ({
+    slug,
+    path: `/student-resume-examples/${slug}`,
+    family: 'student',
+    role,
+    templateId,
+    seoTitle: `${role} Resume Sample and Format | CareerSense`,
+    description,
+    skills,
+    experienceRoles,
+  })
+);
+
+const FORMAT_EXAMPLES = [
+  ['ats-resume-template', 'ATS-Friendly', 'Ats', ['Keyword Alignment', 'Standard Headings', 'Readable Formatting', 'Quantified Results'], 'Use an ATS-friendly resume template with standard sections, selectable text, clear chronology, and space for job-specific keywords.'],
+  ['one-page-resume-template', 'One-Page', 'minimal', ['Concise Writing', 'Prioritization', 'Clear Hierarchy', 'Impact Bullets'], 'Create a one-page resume that prioritizes the most relevant experience, skills, education, and achievements without overcrowding the page.'],
+  ['modern-resume-template', 'Modern', 'modern', ['Visual Hierarchy', 'Professional Branding', 'Skills', 'Achievements'], 'Use a modern resume template with a polished visual hierarchy, clear sections, and an editable structure for contemporary job applications.'],
+  ['professional-resume-template', 'Professional', 'professional', ['Professional Summary', 'Experience', 'Core Skills', 'Achievements'], 'Build a professional resume with a credible summary, reverse-chronological experience, relevant skills, and measurable accomplishments.'],
+  ['academic-resume-template', 'Academic', 'Academic', ['Research', 'Publications', 'Education', 'Teaching'], 'Create an academic resume for research, teaching, higher education, or postgraduate applications with room for publications, projects, and credentials.'],
+];
+
+export const RESUME_TEMPLATE_EXAMPLES = FORMAT_EXAMPLES.map(
+  ([slug, role, templateId, skills, description]) => ({
+    slug,
+    path: `/resume-templates/${slug}`,
+    family: 'template',
+    role: `${role} Resume`,
+    templateId,
+    seoTitle: `${role} Resume Template | CareerSense`,
+    description,
+    skills,
+    experienceRoles: ['Professional Experience', 'Selected Projects', 'Education and Certifications', 'Skills and Achievements'],
+  })
+);
+
+export const ALL_RESUME_SEO_EXAMPLES = [
+  ...RESUME_EXAMPLE_ROLES,
+  ...STUDENT_RESUME_EXAMPLES,
+  ...RESUME_TEMPLATE_EXAMPLES,
+];
+
+export const getResumeSeoExampleByPath = (path = '') =>
+  ALL_RESUME_SEO_EXAMPLES.find((example) => example.path === path) || null;
+
 export const getResumeExampleRole = (slug = '') =>
   RESUME_EXAMPLE_ROLES.find((example) => example.slug === slug) || null;
 
 export const buildRoleResumeData = (example) => ({
   personal: {
-    name: 'ALEX MORGAN',
+    name: 'Pooja Bansal',
     title: example.role,
-    email: 'alex.morgan@example.com',
+    email: 'pooja.bansal@example.com',
     phone: '+1 555 0142 880',
     location: 'New York, USA',
-    linkedin: 'linkedin.com/in/alexmorgan',
+    linkedin: 'linkedin.com/in/poojabansal',
     summary: `${example.role} with progressive experience delivering high-quality work, improving team performance, and translating complex requirements into measurable outcomes. Known for clear communication, dependable execution, and strong cross-functional collaboration.`,
   },
   experience: example.experienceRoles.map((role, index) => ({
@@ -99,7 +174,7 @@ const ROLE_SEARCH_ALIASES = {
 };
 
 export const getTemplateSeoMetadata = (templateId) => {
-  const example = RESUME_EXAMPLE_ROLES.find((item) => item.templateId === templateId);
+  const example = ALL_RESUME_SEO_EXAMPLES.find((item) => item.templateId === templateId);
   if (!example) return {};
 
   return {

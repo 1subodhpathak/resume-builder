@@ -20,7 +20,7 @@ import poojaImage from '../../../assets/Pooja.png';
    CATEGORIES
 ------------------------------------------------------- */
 
-const CATEGORIES = [
+const JOB_CATEGORIES = [
   {
     id: 'bi',
     templateId: 'business-analyst',
@@ -144,6 +144,19 @@ const CATEGORIES = [
   },
 ];
 
+const COLLEGE_CATEGORIES = [
+  { id: 'college-iit', templateId: 'iit', label: 'Indian Institute of Technology (IIT)', icon: GraduationCap, name: 'AARAV SHARMA', title: 'B.Tech Computer Science', company: 'Innovation Lab', role: 'Research Intern', skills: ['Python', 'Machine Learning', 'Algorithms', 'SQL', 'Git'] },
+  { id: 'college-iim', templateId: 'iim', label: 'Indian Institute of Management (IIM)', icon: Building2, name: 'ANSHUL MEHTA', title: 'MBA Candidate', company: 'Strategy Consulting Group', role: 'Management Intern', skills: ['Strategy', 'Analytics', 'Finance', 'Excel', 'Leadership'] },
+  { id: 'college-bits', templateId: 'bits', label: 'BITS Pilani', icon: GraduationCap, name: 'ROHINI KAPOOR', title: 'B.E. Computer Science', company: 'Product Engineering Lab', role: 'Software Engineering Intern', skills: ['React', 'Node.js', 'Python', 'Data Structures', 'Cloud'] },
+  { id: 'college-xlri', templateId: 'xlri', label: 'XLRI', icon: Building2, name: 'ISHA VERMA', title: 'PGDM Candidate', company: 'People Strategy Practice', role: 'HR Strategy Intern', skills: ['People Analytics', 'Strategy', 'Excel', 'Research', 'Communication'] },
+  { id: 'college-mdi', templateId: 'mdi-gurgaon', label: 'MDI Gurgaon', icon: Building2, name: 'KARLEEN MALHOTRA', title: 'PGDM Candidate', company: 'Business Advisory Group', role: 'Consulting Intern', skills: ['Consulting', 'Market Research', 'Power BI', 'Finance', 'Presentation'] },
+  { id: 'college-nmims', templateId: 'nmims', label: 'Narsee Monjee University (NMIMS)', icon: GraduationCap, name: 'RIYA SHAH', title: 'MBA Candidate', company: 'Growth Strategy Team', role: 'Business Analyst Intern', skills: ['Business Analysis', 'Marketing', 'SQL', 'Excel', 'Storytelling'] },
+  { id: 'college-banasthali', templateId: 'banasthali', label: 'Banasthali Vidyapith', icon: GraduationCap, name: 'MEERA JOSHI', title: 'B.Tech Information Technology', company: 'Digital Innovation Centre', role: 'Technology Intern', skills: ['Java', 'Web Development', 'Databases', 'Research', 'Teamwork'] },
+  { id: 'college-bhu', templateId: 'bhu', label: 'Banaras Hindu University', icon: GraduationCap, name: 'ADITYA SINGH', title: 'M.Sc. Data Science', company: 'Analytics Research Centre', role: 'Research Associate', skills: ['Statistics', 'Python', 'NLP', 'Visualization', 'Research'] },
+  { id: 'college-lpu', templateId: 'lpu', label: 'Lovely Professional University', icon: GraduationCap, name: 'SIMRAN KAUR', title: 'B.Tech AI & ML', company: 'Applied AI Studio', role: 'AI Engineering Intern', skills: ['Machine Learning', 'Python', 'Deep Learning', 'GitHub', 'Cloud'] },
+  { id: 'college-nit', templateId: 'nit', label: 'National Institute of Technology', icon: GraduationCap, name: 'ARJUN NAIR', title: 'B.Tech Computer Science and Engineering', company: 'Engineering Innovation Lab', role: 'Software Engineering Intern', skills: ['C++', 'Python', 'Data Structures', 'React', 'Cloud'] },
+];
+
 const CAREER_HISTORY = {
   bi: [
     ['Senior BI Specialist', 'FinStream Corp'],
@@ -210,7 +223,13 @@ const EXPERIENCE_ACHIEVEMENTS = [
    BUILD RESUME EXAMPLE DATA
 ------------------------------------------------------- */
 
-const buildExampleContent = (category) => ({
+const buildExampleContent = (category) => {
+ const isCollege = category.id.startsWith('college-');
+ const collegeHistory = [
+   ['Student Researcher', 'Centre for Applied Research'],
+   ['Technical Coordinator', 'Student Innovation Council'],
+ ];
+ return ({
   personal: {
     name: category.name,
     title: category.title,
@@ -218,7 +237,10 @@ const buildExampleContent = (category) => ({
       .toLowerCase()
       .replace(/\s+/g, '.')}@careersense.com`,
     phone: '+1 555 0199 283',
-    location: 'New York, USA',
+    location: isCollege ? 'India' : 'New York, USA',
+    linkedin: 'linkedin.com/in/candidate-profile',
+    github: 'github.com/candidate-portfolio',
+    website: 'candidate-portfolio.com',
     photo: poojaImage,
     summary: `${category.title} with strong experience in strategy, execution, stakeholder collaboration, and measurable business outcomes. Skilled at turning complex requirements into clear, high-impact work across fast-moving professional environments.`,
   },
@@ -234,7 +256,7 @@ const buildExampleContent = (category) => ({
 • Partnered with senior stakeholders to define priorities, track outcomes, and deliver measurable results.`,
       pageBreak: false,
     },
-    ...(CAREER_HISTORY[category.id] || []).map(([role, company], index) => ({
+    ...(CAREER_HISTORY[category.id] || (isCollege ? collegeHistory : [])).map(([role, company], index) => ({
       id: index + 2,
       role,
       company,
@@ -244,7 +266,26 @@ const buildExampleContent = (category) => ({
     })),
   ],
 
-  education: [
+  education: isCollege ? [
+    {
+      id: 1,
+      degree: category.title,
+      specialization: category.skills[0],
+      school: category.label,
+      grade: '8.7 / 10',
+      date: '2022 - 2026',
+      pageBreak: false,
+    },
+    {
+      id: 2,
+      degree: 'Senior Secondary Education',
+      specialization: 'Science and Mathematics',
+      school: 'National Public School',
+      grade: '94.2%',
+      date: '2022',
+      pageBreak: false,
+    },
+  ] : [
     {
       id: 1,
       degree: 'Bachelor of Science',
@@ -253,6 +294,18 @@ const buildExampleContent = (category) => ({
       pageBreak: false,
     },
   ],
+
+  internships: isCollege ? [
+    {
+      id: 1,
+      role: category.role,
+      company: category.company,
+      location: 'India',
+      date: 'May 2025 - Jul 2025',
+      desc: `• Delivered a live project using ${category.skills.slice(0, 2).join(' and ')} to solve a measurable business problem.\n• Presented findings to senior mentors and incorporated feedback into the final implementation.`,
+      pageBreak: false,
+    },
+  ] : [],
 
   skills: {
     core: category.skills.slice(0, 3),
@@ -269,9 +322,19 @@ const buildExampleContent = (category) => ({
     {
       id: 1,
       name: `${category.label} Optimization Project`,
+      url: 'candidate-portfolio.com/optimization-project',
+      repositoryUrl: 'github.com/candidate-portfolio/optimization-project',
       desc: `Designed and delivered a structured initiative that improved workflow quality, reduced manual effort, and created measurable business impact.`,
       pageBreak: false,
     },
+    ...(isCollege ? [{
+      id: 2,
+      name: 'Campus Analytics and Automation Platform',
+      url: 'candidate-portfolio.com/campus-project',
+      repositoryUrl: 'github.com/candidate-portfolio/campus-project',
+      desc: `Built an end-to-end solution using ${category.skills.slice(0, 3).join(', ')} and improved reporting turnaround by 35%.`,
+      pageBreak: false,
+    }] : []),
   ],
 
   awards: [
@@ -281,6 +344,7 @@ const buildExampleContent = (category) => ({
       issuer: category.company,
       pageBreak: false,
     },
+    ...(isCollege ? [{ id: 2, name: 'Dean’s Merit Recognition', issuer: category.label, date: '2024', pageBreak: false }] : []),
   ],
 
   certifications: [
@@ -291,20 +355,34 @@ const buildExampleContent = (category) => ({
       date: '2019',
       pageBreak: false,
     },
+    ...(isCollege ? [{ id: 2, name: `${category.skills[0]} Foundations`, issuer: 'Online Learning Academy', date: '2024', pageBreak: false }] : []),
   ],
+
+  responsibilities: isCollege ? [
+    { id: 1, role: 'Student Coordinator', organization: 'Innovation and Entrepreneurship Cell', date: '2024 - Present', desc: 'Led a 12-member student team, organized industry workshops, and coordinated mentor engagement for campus projects.' },
+    { id: 2, role: 'Core Committee Member', organization: 'Placement and Career Committee', date: '2023 - 2024', desc: 'Supported employer outreach, student preparation sessions, and placement-event operations.' },
+  ] : [],
+
+  extracurriculars: isCollege ? [
+    { id: 1, name: 'National Case Competition Finalist', description: 'Developed and presented a data-backed growth strategy.', date: '2025' },
+    { id: 2, name: 'Community Mentoring Volunteer', description: 'Mentored school students in digital literacy and career awareness.', date: '2024' },
+  ] : [],
 
   languages: [
     { name: 'English', level: 'Native' },
     { name: 'Spanish', level: 'Conversational' },
   ],
-});
+ });
+};
 
 
 /* -------------------------------------------------------
    PREGENERATED EXAMPLE CONTENT
 ------------------------------------------------------- */
 
-const EXAMPLE_CONTENT = CATEGORIES.reduce((acc, category) => {
+const ALL_CATEGORIES = [...JOB_CATEGORIES, ...COLLEGE_CATEGORIES];
+
+const EXAMPLE_CONTENT = ALL_CATEGORIES.reduce((acc, category) => {
   acc[category.id] = buildExampleContent(category);
   return acc;
 }, {});
@@ -315,14 +393,17 @@ const EXAMPLE_CONTENT = CATEGORIES.reduce((acc, category) => {
 ------------------------------------------------------- */
 
 const ResumeExamples = ({ onStart }) => {
+  const [exampleType, setExampleType] = useState('job');
   const [activeTab, setActiveTab] = useState('teacher');
 
+  const activeCategories = exampleType === 'college' ? COLLEGE_CATEGORIES : JOB_CATEGORIES;
+
   const activeCategory =
-    CATEGORIES.find((category) => category.id === activeTab) ||
-    CATEGORIES[0];
+    activeCategories.find((category) => category.id === activeTab) ||
+    activeCategories[0];
 
   const activeContent =
-    EXAMPLE_CONTENT[activeTab] || EXAMPLE_CONTENT.bi;
+    EXAMPLE_CONTENT[activeCategory.id] || EXAMPLE_CONTENT.bi;
 
   const activePreviewContent = {
     ...activeContent,
@@ -334,6 +415,12 @@ const ResumeExamples = ({ onStart }) => {
 
   const activeTemplateId =
     activeCategory.templateId || 'professional';
+
+  const selectExampleType = (type) => {
+    const categories = type === 'college' ? COLLEGE_CATEGORIES : JOB_CATEGORIES;
+    setExampleType(type);
+    setActiveTab(categories[0].id);
+  };
 
 
   return (
@@ -348,7 +435,7 @@ const ResumeExamples = ({ onStart }) => {
 
           {/* EYEBROW */}
           <div className="mb-3 bg-gradient-to-r from-[#8D651F] via-[#B88A32] to-[#D8B65E] bg-clip-text text-[10px] font-black uppercase tracking-[0.23em] text-transparent">
-            Profession-Based Examples
+            {exampleType === 'college' ? 'College-Inspired Examples' : 'Profession-Based Examples'}
           </div>
 
 
@@ -362,7 +449,7 @@ const ResumeExamples = ({ onStart }) => {
             <br />
 
             <span className="bg-gradient-to-b from-[#E7C86E] via-[#BA8B32] to-[#88601B] bg-clip-text text-transparent">
-              tailored for your job.
+              {exampleType === 'college' ? 'inspired by Top colleges.' : 'tailored for your job.'}
             </span>
 
           </h2>
@@ -370,9 +457,9 @@ const ResumeExamples = ({ onStart }) => {
 
           {/* DESCRIPTION */}
           <p className="mb-6 max-w-[560px] text-[14px] font-medium leading-[1.75] text-[#53657E] sm:text-[15px]">
-            Explore polished resume examples across popular roles,
-            industries, and career paths. Pick a direction, preview the
-            structure, and start building with a professional template.
+            {exampleType === 'college'
+              ? 'Explore structured campus-style resumes inspired by leading colleges. Select a format, preview the complete template, and start building your own.'
+              : 'Explore polished resume examples across popular roles, industries, and career paths. Pick a direction, preview the structure, and start building with a professional template.'}
           </p>
 
 
@@ -392,9 +479,27 @@ const ResumeExamples = ({ onStart }) => {
           {/* ------------------------------------------------
               PROFESSION SELECTOR
           ------------------------------------------------ */}
+          <div className="mb-3 grid grid-cols-2 rounded-xl border border-[#CAD7E5] bg-[#EDF2F7] p-1" role="group" aria-label="Resume example type">
+            {[
+              { id: 'college', label: 'College Inspired' },
+              { id: 'job', label: 'Job Inspired' },
+            ].map((option) => {
+              const selected = exampleType === option.id;
+              return <button
+                key={option.id}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => selectExampleType(option.id)}
+                className={`min-h-[40px] rounded-lg px-3 py-2 text-[11px] font-extrabold transition-colors ${selected
+                  ? 'bg-[#0C2D50] text-white shadow-[0_5px_14px_rgba(6,23,44,0.16)]'
+                  : 'text-[#536980] hover:bg-white hover:text-[#123B68]'}`}
+              >{option.label}</button>;
+            })}
+          </div>
+
           <div className="grid grid-cols-2 gap-2.5">
 
-            {CATEGORIES.map((category) => {
+            {activeCategories.map((category) => {
               const Icon = category.icon;
               const isActive = activeTab === category.id;
 

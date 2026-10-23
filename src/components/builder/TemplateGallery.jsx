@@ -9,6 +9,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   SlidersHorizontal,
+  Users,
   X,
 } from 'lucide-react';
 
@@ -192,6 +193,7 @@ const themeClass = {
 };
 
 const FIT_LEVELS = ['Any', 'Good', 'Strong'];
+const TEMPLATE_CATEGORIES = ['All', 'Students', 'Professionals', 'Services'];
 
 const FIT_FILTER_CONFIG = [
   {
@@ -209,18 +211,12 @@ const FIT_FILTER_CONFIG = [
     label: 'Job description fit',
     description: 'Matches role signals in your uploaded job description.',
   },
-  {
-    key: 'styleFit',
-    label: 'Style fit',
-    description: 'Supports the visual needs detected in your resume.',
-  },
 ];
 
 const FIT_SCORE_THRESHOLDS = {
   contentFit: { Good: 12, Strong: 28 },
   atsFit: { Good: 28, Strong: 48 },
   jdFit: { Good: 4, Strong: 12 },
-  styleFit: { Good: 8, Strong: 16 },
 };
 
 const getAtsSafetyScore = (template, recommendation) => {
@@ -413,10 +409,10 @@ const TemplateGallery = ({
   const helpTourPanelRef = useRef(null);
   const helpTourDragRef = useRef({ offsetX: 0, offsetY: 0 });
   const [filters, setFilters] = useState({
+    category: 'All',
     contentFit: 'Any',
     atsFit: 'Any',
     jdFit: 'Any',
-    styleFit: 'Any',
     headshot: 'All',
     graphics: 'All',
     columns: 'All',
@@ -511,6 +507,7 @@ const TemplateGallery = ({
 
   const hasActiveFilters =
     Boolean(searchTerm.trim()) ||
+    filters.category !== 'All' ||
     FIT_FILTER_CONFIG.some(({ key }) => filters[key] !== 'Any') ||
     filters.headshot !== 'All' ||
     filters.graphics !== 'All' ||
@@ -533,10 +530,10 @@ const TemplateGallery = ({
 
   const handleClearFilters = () => {
     setFilters({
+      category: 'All',
       contentFit: 'Any',
       atsFit: 'Any',
       jdFit: 'Any',
-      styleFit: 'Any',
       headshot: 'All',
       graphics: 'All',
       columns: 'All',
@@ -555,9 +552,12 @@ const TemplateGallery = ({
         template.name,
         template.seoName,
         template.id,
+        template.category,
         ...(template.searchAliases || []),
       ].filter(Boolean).join(' ').toLowerCase();
       const matchesSearch = searchableText.includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        filters.category === 'All' || template.category === filters.category;
 
       const matchesHeadshot = filters.headshot === 'All' ||
         (filters.headshot === 'Yes'
@@ -577,7 +577,7 @@ const TemplateGallery = ({
         !filters.color || getColorFamily(template.color) === filters.color;
       const recommendation = recommendationMap.get(template.id);
       const matchesFitLevels = FIT_FILTER_CONFIG.every(({ key }) => {
-        const needsResume = key === 'contentFit' || key === 'styleFit';
+        const needsResume = key === 'contentFit';
         const needsJobDescription = key === 'jdFit';
         const isAvailable =
           (!needsResume || hasImportedResume) &&
@@ -588,6 +588,7 @@ const TemplateGallery = ({
 
       return (
         matchesSearch &&
+        matchesCategory &&
         matchesHeadshot &&
         matchesGraphics &&
         matchesColumns &&
@@ -752,30 +753,15 @@ const TemplateGallery = ({
                 ) : null}
               </div>
 
-              <FilterSection title="Minimum match" icon={SlidersHorizontal}>
-                {FIT_FILTER_CONFIG.map((fitFilter) => {
-                  const needsResume =
-                    fitFilter.key === 'contentFit' || fitFilter.key === 'styleFit';
-                  const needsJobDescription = fitFilter.key === 'jdFit';
-                  const disabled =
-                    (needsResume && !hasImportedResume) ||
-                    (needsJobDescription && (mode !== 'tailor' || !jdText.trim()));
-                  const unavailableText = needsJobDescription
-                    ? 'Upload a job description to use this filter.'
-                    : 'Add resume content to use this filter.';
-
-                  return (
-                    <FitLevelFilter
-                      key={fitFilter.key}
-                      label={fitFilter.label}
-                      description={fitFilter.description}
-                      value={filters[fitFilter.key]}
-                      disabled={disabled}
-                      unavailableText={unavailableText}
-                      onChange={(level) => handleFitLevelChange(fitFilter.key, level)}
-                    />
-                  );
-                })}
+              <FilterSection title="Audience" icon={Users}>
+                {TEMPLATE_CATEGORIES.map((category) => (
+                  <CheckboxItem
+                    key={category}
+                    label={category === 'All' ? 'All templates' : category}
+                    checked={filters.category === category}
+                    onChange={() => setFilters((current) => ({ ...current, category }))}
+                  />
+                ))}
               </FilterSection>
 
               <FilterSection title="Layout" icon={Layout}>
@@ -837,6 +823,31 @@ const TemplateGallery = ({
                     />
                   ))}
                 </div>
+              </FilterSection>
+
+              <FilterSection title="Minimum match" icon={SlidersHorizontal}>
+                {FIT_FILTER_CONFIG.map((fitFilter) => {
+                  const needsResume = fitFilter.key === 'contentFit';
+                  const needsJobDescription = fitFilter.key === 'jdFit';
+                  const disabled =
+                    (needsResume && !hasImportedResume) ||
+                    (needsJobDescription && (mode !== 'tailor' || !jdText.trim()));
+                  const unavailableText = needsJobDescription
+                    ? 'Upload a job description to use this filter.'
+                    : 'Add resume content to use this filter.';
+
+                  return (
+                    <FitLevelFilter
+                      key={fitFilter.key}
+                      label={fitFilter.label}
+                      description={fitFilter.description}
+                      value={filters[fitFilter.key]}
+                      disabled={disabled}
+                      unavailableText={unavailableText}
+                      onChange={(level) => handleFitLevelChange(fitFilter.key, level)}
+                    />
+                  );
+                })}
               </FilterSection>
 
               <div className="rounded-[0.9rem] border border-[#E5D19C] bg-[#FFF9EC] p-3 text-[9.5px] font-medium leading-[1.55] text-[#5F7084]">

@@ -203,8 +203,9 @@ const ReportingMisDashboard = ({ data }) => {
 
   const CONTENT_WIDTH = '194mm';
   const COLUMN_WIDTH = '90mm';
-  const FIRST_PAGE_CONTENT_HEIGHT = '211mm';
-  const CONTINUATION_CONTENT_HEIGHT = '250mm';
+  // Keep measured blocks above the fixed footer across browser/PDF engines.
+  const FIRST_PAGE_CONTENT_HEIGHT = '201mm';
+  const CONTINUATION_CONTENT_HEIGHT = '240mm';
 
   const nameParts = personal.name
     ? personal.name.split(' ')

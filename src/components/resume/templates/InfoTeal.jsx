@@ -64,7 +64,8 @@ const InfoTeal = ({ data }) => {
   const MAIN_WIDTH = '118mm';
   const SIDE_WIDTH = '62mm';
   const GAP = '8mm';
-  const CONTENT_HEIGHT = '276mm';
+  // Reserve a small pagination safety zone for browser/PDF font rounding.
+  const CONTENT_HEIGHT = '264mm';
   const FOOTER_RESERVE = '6mm';
 
   const mainMeasureRefs = useRef({});

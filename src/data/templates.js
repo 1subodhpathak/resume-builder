@@ -18,7 +18,8 @@ const ROLE_GROUPS = {
     'chartered-accountant', 'accounting', 'brick-formal', 'luxe',
   ]),
   sales: new Set(['sales']),
-  academic: new Set(['Academic', 'teacher', 'student-notes']),
+  academic: new Set(['Academic', 'iit', 'iim', 'bits', 'xlri', 'mdi-gurgaon', 'nmims',
+    'banasthali', 'bhu', 'lpu', 'nit', 'teacher', 'student-notes']),
   healthcare: new Set(['doctor-profile', 'physician-care', 'medical']),
   leadership: new Set([
     'executive', 'indigo-elite', 'leadership-signature', 'boardroom-one', 'ceo-brief',
@@ -30,7 +31,9 @@ const ROLE_GROUPS = {
 const CREATIVE_TEMPLATE_IDS = new Set(ROLE_GROUPS.design);
 const EXECUTIVE_TEMPLATE_IDS = new Set([...ROLE_GROUPS.leadership, ...ROLE_GROUPS.finance, ...ROLE_GROUPS.legal]);
 const ATS_TEMPLATE_IDS = new Set([
-  'professional', 'Ats', 'minimal', 'classic', 'formal', 'Academic', 'ocean-ats',
+  'professional', 'Ats', 'minimal', 'classic', 'formal', 'Academic', 'iit', 'iim', 'bits', 'xlri',
+  'mdi-gurgaon', 'nmims', 'ocean-ats',
+  'banasthali', 'bhu', 'lpu', 'nit',
   'career-launch', 'associate-prime', 'consulting-line', 'leadership-signature', 'boardroom-one', 'ceo-brief',
 ]);
 

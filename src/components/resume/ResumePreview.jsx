@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useMemo, useRef } from 'react';
 import * as Templates from './templates';
 import UniversalTemplateRenderer from './UniversalTemplateRenderer';
 import { installResumeSectionSpacing, markResumeContentSurface } from './templateSurfaceUtils';
+import { installResumeProfileLinks } from './resumeProfileLinks';
 import TemplateDataCompleteness, { templateNeedsLinkedInFallback } from './TemplateDataCompleteness';
 import { mergeVolunteeringIntoExperience } from '../../utils/volunteeringExperience';
 
@@ -83,6 +84,11 @@ const appendDescriptionLines = (description, lines) =>
 
 const normalizePreviewData = (data = {}, templateId) => {
   const normalizedData = mergeVolunteeringIntoExperience(data);
+  const usesSeparateEducationScore = [
+  'iit', 'iim', 'bits', 'xlri', 'mdi-gurgaon', 'nmims', 'banasthali', 'bhu', 'lpu', 'nit',
+  ].includes(templateId);
+  const usesSeparateEducationSpecialization = templateId === 'xlri';
+  const usesProjectLinkColumns = templateId === 'bits';
 
   const personal = normalizedData.personal || {};
   const supplementalLinks = [
@@ -99,15 +105,19 @@ const normalizePreviewData = (data = {}, templateId) => {
   }));
   normalizedData.projects = (normalizedData.projects || []).map((item) => ({
     ...item,
-    desc: appendDescriptionLines(item.desc, [
+    desc: usesProjectLinkColumns ? item.desc : appendDescriptionLines(item.desc, [
       item.url ? `Project: ${item.url}` : '',
       item.repositoryUrl ? `Repository: ${item.repositoryUrl}` : '',
     ]),
   }));
   normalizedData.education = (normalizedData.education || []).map((item) => ({
     ...item,
-    degree: joinMetadata(item.degree, item.specialization),
-    school: joinMetadata(item.school, item.grade ? `Grade: ${item.grade}` : ''),
+    degree: usesSeparateEducationSpecialization
+      ? item.degree
+      : joinMetadata(item.degree, item.specialization),
+    school: usesSeparateEducationScore
+      ? item.school
+      : joinMetadata(item.school, item.grade ? `Grade: ${item.grade}` : ''),
   }));
   normalizedData.certifications = (normalizedData.certifications || []).map((item) => ({
     ...item,
@@ -136,6 +146,16 @@ const TEMPLATE_COMPONENT_MAP = {
   classic: Templates.Classic,
   formal: Templates.Formal,
   Academic: Templates.Academic,
+  iit: Templates.IIT,
+  iim: Templates.IIM,
+  bits: Templates.BITS,
+  xlri: Templates.XLRI,
+  'mdi-gurgaon': Templates.MDIGurgaon,
+  nmims: Templates.NMIMS,
+  banasthali: Templates.Banasthali,
+  bhu: Templates.BHU,
+  lpu: Templates.LPU,
+  nit: Templates.NIT,
   'ocean-ats': Templates.OceanATS,
   'software-engineer': Templates.SoftwareEngineer,
   'data-scientist': Templates.DataScientist,
@@ -259,11 +279,13 @@ const ResumePreview = ({ data, template }) => {
     if (!surfaceRef.current) return;
     markResumeContentSurface(surfaceRef.current);
     const removeSectionSpacing = installResumeSectionSpacing(surfaceRef.current);
+    const removeProfileLinks = installResumeProfileLinks(surfaceRef.current, normalizedData?.personal);
 
     return () => {
       removeSectionSpacing?.();
+      removeProfileLinks?.();
     };
-  }, [template]);
+  }, [template, normalizedData?.personal]);
 
   return (
     <div className="resume-page-shell" style={documentStyle}>

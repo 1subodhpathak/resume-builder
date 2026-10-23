@@ -55,9 +55,10 @@ const REVIEW_HELP_STEPS = [
   },
 ];
 
-const SidebarItem = ({ step, index, activeIndex, onClick }) => {
+const SidebarItem = ({ step, index, activeIndex, onClick, status }) => {
   const isActive = index === activeIndex;
-  const isCompleted = index < activeIndex;
+  const isCompleted = status?.complete;
+  const needsAttention = Boolean(status?.missing);
   const Icon = step.icon;
 
   return (
@@ -68,6 +69,8 @@ const SidebarItem = ({ step, index, activeIndex, onClick }) => {
           ? 'border-[#C9A64E]/45 bg-[linear-gradient(135deg,#FFFDF8_0%,#FFF8E8_100%)] text-[#173A62] shadow-[0_7px_20px_rgba(185,150,74,0.10)]'
           : isCompleted
             ? 'border-[#D9E3EC] bg-white text-[#173A62] shadow-[0_2px_8px_rgba(15,43,75,0.035)] hover:border-[#C9A64E]/35'
+            : needsAttention
+              ? 'border-[#E4B29F] bg-[#FFF9F6] text-[#7F3E2B] shadow-[0_2px_8px_rgba(127,62,43,0.05)] hover:border-[#D8896F]'
             : 'border-[#D9E3EC] bg-white text-[#6C7E91] shadow-[0_2px_8px_rgba(15,43,75,0.025)] hover:-translate-y-0.5 hover:border-[#BFCBD7] hover:text-[#173A62] hover:shadow-[0_6px_16px_rgba(15,43,75,0.06)]'
       }`}
     >
@@ -82,6 +85,8 @@ const SidebarItem = ({ step, index, activeIndex, onClick }) => {
               ? 'border-[#D8B45E]/45 bg-white text-[#9A7225] shadow-[0_3px_10px_rgba(185,150,74,0.10)]'
               : isCompleted
                 ? 'border-[#C8D7E5] bg-[#EEF4FA] text-[#123B6D]'
+                : needsAttention
+                  ? 'border-[#E4B29F] bg-[#FFF3EE] text-[#A14B32]'
                 : 'border-[#E1E7EF] bg-[#F7F9FB] text-[#8292A3] group-hover:bg-white group-hover:text-[#123B6D]'
           }`}
         >
@@ -99,7 +104,7 @@ const SidebarItem = ({ step, index, activeIndex, onClick }) => {
                   : 'text-[#9AA8B7]'
             }`}
           >
-            {isCompleted ? 'Complete' : isActive ? 'Editing' : `Step ${index + 1}`}
+            {isCompleted ? 'Complete' : isActive ? 'Editing' : needsAttention ? `${status.missing} missing` : `Step ${index + 1}`}
           </div>
         </div>
 
@@ -111,33 +116,41 @@ const SidebarItem = ({ step, index, activeIndex, onClick }) => {
   );
 };
 
-const FormInput = ({ label, value, onChange, placeholder, half = false }) => (
+const FormInput = ({ label, value, onChange, placeholder, half = false, required = false }) => {
+  const isMissing = required && !String(value || '').trim();
+  return (
   <div className={`${half ? 'sm:col-span-1' : 'sm:col-span-2'}`}>
-    <label className="mb-1.5 block text-[11.5px] font-semibold text-[#40556D]">
+    <label className={`mb-1.5 block text-[11.5px] font-semibold ${isMissing ? 'text-[#A14B32]' : 'text-[#40556D]'}`}>
       {label}
     </label>
     <input
       value={value || ''}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="min-h-10 w-full rounded-[0.7rem] border border-[#D6E0EA] bg-white px-3.5 py-2 text-[13.5px] font-medium text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-all placeholder:text-[#98A7B6] hover:border-[#C6D2DE] focus:border-[#C49A43] focus:ring-4 focus:ring-[#C49A43]/10"
+      aria-invalid={isMissing}
+      className={`min-h-10 w-full rounded-[0.7rem] border px-3.5 py-2 text-[13.5px] font-medium text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-all placeholder:text-[#98A7B6] focus:ring-4 ${isMissing ? 'border-[#D8896F] bg-[#FFF8F5] hover:border-[#C96E50] focus:border-[#C96E50] focus:ring-[#C96E50]/10' : 'border-[#D6E0EA] bg-white hover:border-[#C6D2DE] focus:border-[#C49A43] focus:ring-[#C49A43]/10'}`}
     />
   </div>
-);
+  );
+};
 
-const FormTextArea = ({ label, value, onChange, placeholder }) => (
+const FormTextArea = ({ label, value, onChange, placeholder, required = false }) => {
+  const isMissing = required && !String(value || '').trim();
+  return (
   <div className="sm:col-span-2">
-    <label className="mb-1.5 block text-[11.5px] font-semibold text-[#40556D]">
+    <label className={`mb-1.5 block text-[11.5px] font-semibold ${isMissing ? 'text-[#A14B32]' : 'text-[#40556D]'}`}>
       {label}
     </label>
     <textarea
       value={value || ''}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="h-24 w-full resize-none rounded-[0.7rem] border border-[#D6E0EA] bg-white px-3.5 py-2.5 text-[13.5px] font-medium leading-[1.5] text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-all custom-scrollbar placeholder:text-[#98A7B6] hover:border-[#C6D2DE] focus:border-[#C49A43] focus:ring-4 focus:ring-[#C49A43]/10"
+      aria-invalid={isMissing}
+      className={`h-24 w-full resize-none rounded-[0.7rem] border px-3.5 py-2.5 text-[13.5px] font-medium leading-[1.5] text-[#10243E] shadow-[0_1px_2px_rgba(7,20,38,0.035)] outline-none transition-all custom-scrollbar placeholder:text-[#98A7B6] focus:ring-4 ${isMissing ? 'border-[#D8896F] bg-[#FFF8F5] hover:border-[#C96E50] focus:border-[#C96E50] focus:ring-[#C96E50]/10' : 'border-[#D6E0EA] bg-white hover:border-[#C6D2DE] focus:border-[#C49A43] focus:ring-[#C49A43]/10'}`}
     />
   </div>
-);
+  );
+};
 
 const ReviewMetricCard = ({ label, value }) => (
   <div className="min-w-[132px] rounded-[0.8rem] border border-[#D9E3EC] bg-white px-3 py-2.5 shadow-[0_3px_10px_rgba(15,43,75,0.035)]">
@@ -203,6 +216,73 @@ const DataReview = ({
   const isVerbatimImport = importMode === 'verbatim';
   const completionLabel = isVerbatimImport ? 'Open Builder' : 'Continue to Templates';
   const insights = useMemo(() => getResumeInsights(formData), [formData]);
+  const completeness = useMemo(() => {
+    const present = (value) => String(value || '').trim().length > 0;
+    const section = (checks) => {
+      const normalized = checks.length ? checks : [false];
+      const complete = normalized.filter(Boolean).length;
+      return {
+        complete: complete === normalized.length,
+        missing: normalized.length - complete,
+        total: normalized.length,
+        filled: complete,
+      };
+    };
+    const listChecks = (items, fields) => {
+      if (!Array.isArray(items) || !items.length) return [false];
+      return items.flatMap((item) => fields.map((field) => present(field(item || {}))));
+    };
+
+    const sections = {
+      personal: section([
+        formData.personal?.name,
+        formData.personal?.title,
+        formData.personal?.email,
+        formData.personal?.phone,
+        formData.personal?.location,
+        formData.personal?.linkedin,
+        formData.personal?.github,
+        formData.personal?.portfolio || formData.personal?.website,
+      ].map(present)),
+      experience: section(listChecks(formData.experience, [
+        (item) => item.role,
+        (item) => item.company,
+        (item) => item.date,
+        (item) => item.location,
+        (item) => item.employmentType,
+        (item) => item.desc,
+      ])),
+      education: section(listChecks(formData.education, [
+        (item) => item.school,
+        (item) => item.degree,
+        (item) => item.date,
+        (item) => item.specialization,
+        (item) => item.grade || item.cgpa || item.gpa || item.percentage,
+      ])),
+      skills: section([
+        Array.isArray(formData.skills?.technical) && formData.skills.technical.some(present),
+        Array.isArray(formData.skills?.core) && formData.skills.core.some(present),
+      ]),
+      projects: section(listChecks(formData.projects, [
+        (item) => item.name,
+        (item) => item.url || item.projectLink,
+        (item) => item.repositoryUrl || item.repositoryLink,
+        (item) => item.desc,
+      ])),
+      summary: section([present(formData.personal?.summary)]),
+    };
+    const totals = Object.values(sections).reduce((result, value) => ({
+      filled: result.filled + value.filled,
+      total: result.total + value.total,
+      missing: result.missing + value.missing,
+    }), { filled: 0, total: 0, missing: 0 });
+
+    return {
+      sections,
+      ...totals,
+      score: totals.total ? Math.round((totals.filled / totals.total) * 100) : 0,
+    };
+  }, [formData]);
 
   const updatePersonal = (field, value) => {
     setFormData((prev) => ({
@@ -509,12 +589,12 @@ const DataReview = ({
 
               <div className="mt-3 flex items-end justify-between">
                 <div className="text-[24px] font-black tracking-tight text-white">
-                  {insights.readinessScore}
+                  {completeness.score}
                   <span className="ml-0.5 text-[13px] font-bold text-white/50">%</span>
                 </div>
 
                 <div className="rounded-full border border-[#D8B45E]/30 bg-[#D8B45E]/10 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.12em] text-[#E4C46E]">
-                  Ready
+                  {completeness.missing ? `${completeness.missing} Missing` : 'Ready'}
                 </div>
               </div>
 
@@ -522,7 +602,7 @@ const DataReview = ({
                 <div
                   className="h-full rounded-full bg-[linear-gradient(90deg,#E4C46E_0%,#B9964A_100%)] transition-all duration-300"
                   style={{
-                    width: `${insights.readinessScore}%`,
+                    width: `${completeness.score}%`,
                   }}
                 />
               </div>
@@ -541,6 +621,7 @@ const DataReview = ({
                     index={idx}
                     activeIndex={activeStep}
                     onClick={setActiveStep}
+                    status={completeness.sections[step.id]}
                   />
                 ))}
               </div>
@@ -627,12 +708,14 @@ const DataReview = ({
                       value={formData.personal?.name}
                       onChange={(v) => updatePersonal('name', v)}
                       placeholder="e.g. John Doe"
+                      required
                     />
                     <FormInput
                       label="Job Title"
                       value={formData.personal?.title}
                       onChange={(v) => updatePersonal('title', v)}
                       placeholder="e.g. Product Manager"
+                      required
                     />
                     <FormInput
                       label="Email"
@@ -640,6 +723,7 @@ const DataReview = ({
                       onChange={(v) => updatePersonal('email', v)}
                       placeholder="john@example.com"
                       half
+                      required
                     />
                     <FormInput
                       label="Phone"
@@ -647,16 +731,18 @@ const DataReview = ({
                       onChange={(v) => updatePersonal('phone', v)}
                       placeholder="+1 555 000 0000"
                       half
+                      required
                     />
                     <FormInput
                       label="Location"
                       value={formData.personal?.location}
                       onChange={(v) => updatePersonal('location', v)}
                       placeholder="New York, USA"
+                      required
                     />
-                    <FormInput label="LinkedIn" value={formData.personal?.linkedin} onChange={(v) => updatePersonal('linkedin', v)} placeholder="linkedin.com/in/username" />
-                    <FormInput label="GitHub" value={formData.personal?.github} onChange={(v) => updatePersonal('github', v)} placeholder="github.com/username" half />
-                    <FormInput label="Portfolio / Website" value={formData.personal?.portfolio || formData.personal?.website} onChange={(v) => updatePersonal('portfolio', v)} placeholder="yourportfolio.com" half />
+                    <FormInput label="LinkedIn" value={formData.personal?.linkedin} onChange={(v) => updatePersonal('linkedin', v)} placeholder="linkedin.com/in/username" required />
+                    <FormInput label="GitHub" value={formData.personal?.github} onChange={(v) => updatePersonal('github', v)} placeholder="github.com/username" half required />
+                    <FormInput label="Portfolio / Website" value={formData.personal?.portfolio || formData.personal?.website} onChange={(v) => updatePersonal('portfolio', v)} placeholder="yourportfolio.com" half required />
                   </div>
                 )}
 
@@ -690,26 +776,30 @@ const DataReview = ({
                             value={exp.role}
                             onChange={(v) => updateList('experience', i, 'role', v)}
                             placeholder="e.g. Senior Analyst"
+                            required
                           />
                           <FormInput
                             label="Employer"
                             value={exp.company}
                             onChange={(v) => updateList('experience', i, 'company', v)}
                             placeholder="e.g. Google"
+                            required
                           />
                           <FormInput
                             label="Date Range"
                             value={exp.date}
                             onChange={(v) => updateList('experience', i, 'date', v)}
                             placeholder="e.g. 2020 - Present"
+                            required
                           />
-                          <FormInput label="Location" value={exp.location} onChange={(v) => updateList('experience', i, 'location', v)} placeholder="Bengaluru, India or Remote" half />
-                          <FormInput label="Employment Type" value={exp.employmentType} onChange={(v) => updateList('experience', i, 'employmentType', v)} placeholder="Full-time, Internship, Contract" half />
+                          <FormInput label="Location" value={exp.location} onChange={(v) => updateList('experience', i, 'location', v)} placeholder="Bengaluru, India or Remote" half required />
+                          <FormInput label="Employment Type" value={exp.employmentType} onChange={(v) => updateList('experience', i, 'employmentType', v)} placeholder="Full-time, Internship, Contract" half required />
                           <FormTextArea
                             label="Description"
                             value={exp.desc}
                             onChange={(v) => updateList('experience', i, 'desc', v)}
                             placeholder="• Achievements..."
+                            required
                           />
                         </div>
                       </div>
@@ -755,21 +845,24 @@ const DataReview = ({
                             value={edu.school}
                             onChange={(v) => updateList('education', i, 'school', v)}
                             placeholder="e.g. Harvard University"
+                            required
                           />
                           <FormInput
                             label="Degree"
                             value={edu.degree}
                             onChange={(v) => updateList('education', i, 'degree', v)}
                             placeholder="e.g. Bachelors in Science"
+                            required
                           />
                           <FormInput
                             label="Graduation Date"
                             value={edu.date}
                             onChange={(v) => updateList('education', i, 'date', v)}
                             placeholder="e.g. May 2019"
+                            required
                           />
-                          <FormInput label="Specialization" value={edu.specialization} onChange={(v) => updateList('education', i, 'specialization', v)} placeholder="Finance, Data Science..." half />
-                          <FormInput label="Grade / GPA / Percentage" value={edu.grade} onChange={(v) => updateList('education', i, 'grade', v)} placeholder="8.4 CGPA or 82%" half />
+                          <FormInput label="Specialization" value={edu.specialization} onChange={(v) => updateList('education', i, 'specialization', v)} placeholder="Finance, Data Science..." half required />
+                          <FormInput label="Grade / GPA / Percentage" value={edu.grade || edu.cgpa || edu.gpa || edu.percentage} onChange={(v) => updateList('education', i, 'grade', v)} placeholder="8.4 CGPA or 82%" half required />
                         </div>
                       </div>
                     ))}
@@ -802,6 +895,7 @@ const DataReview = ({
                         }))
                       }
                       placeholder="Python, Java, React..."
+                      required
                     />
 
                     <FormTextArea
@@ -823,6 +917,7 @@ const DataReview = ({
                         }));
                       }}
                       placeholder="Leadership, Communication..."
+                      required
                     />
                   </div>
                 )}
@@ -856,13 +951,15 @@ const DataReview = ({
                             label="Project Name"
                             value={proj.name}
                             onChange={(v) => updateList('projects', i, 'name', v)}
+                            required
                           />
-                          <FormInput label="Project Link" value={proj.url} onChange={(v) => updateList('projects', i, 'url', v)} placeholder="project.example.com" half />
-                          <FormInput label="Repository Link" value={proj.repositoryUrl} onChange={(v) => updateList('projects', i, 'repositoryUrl', v)} placeholder="github.com/user/repository" half />
+                          <FormInput label="Project Link" value={proj.url || proj.projectLink} onChange={(v) => updateList('projects', i, 'url', v)} placeholder="project.example.com" half required />
+                          <FormInput label="Repository Link" value={proj.repositoryUrl || proj.repositoryLink} onChange={(v) => updateList('projects', i, 'repositoryUrl', v)} placeholder="github.com/user/repository" half required />
                           <FormTextArea
                             label="Details"
                             value={proj.desc}
                             onChange={(v) => updateList('projects', i, 'desc', v)}
+                            required
                           />
                         </div>
                       </div>
@@ -884,6 +981,7 @@ const DataReview = ({
                     value={formData.personal?.summary}
                     onChange={(v) => updatePersonal('summary', v)}
                     placeholder="Write a short summary of your career..."
+                    required
                   />
                 )}
               </div>

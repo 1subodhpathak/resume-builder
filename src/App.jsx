@@ -14,6 +14,9 @@ import { useAuth, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-rea
 import ResumeBuilderLanding from './components/landing/pages/ResumeBuilderLanding';
 import ResumeExamplesIndexPage from './components/landing/pages/ResumeExamplesIndexPage';
 import ResumeExamplePage from './components/landing/pages/ResumeExamplePage';
+import NotFoundPage from './components/landing/pages/NotFoundPage';
+import { ResumeGuidePage, ResumeGuidesIndexPage } from './components/landing/pages/ResumeGuidesPage';
+import SEO from './components/SEO';
 import ResumeSelection from './components/builder/ResumeSelection';
 import ResumeUpload from './components/landing/features/ResumeUpload';
 import JDUpload from './components/landing/features/JDUpload';
@@ -47,8 +50,13 @@ import { extractTextFromFile } from './utils/fileParser';
 import { scrollToLandingSection } from './components/landing/utils/scrollToLandingSection';
 import {
   buildRoleResumeData,
-  getResumeExampleRole,
+  getResumeSeoExampleByPath,
+  RESUME_EXAMPLE_ROLES,
+  STUDENT_RESUME_EXAMPLES,
+  RESUME_TEMPLATE_EXAMPLES,
 } from './data/resumeExampleSeo';
+import { getResumeGuideByPath } from './data/resumeGuideSeo';
+import { trackSeoConversion, trackSeoPageView } from './utils/seoAnalytics';
 
 const PATH_TO_VIEW_MAP = {
   '/': 'landing',
@@ -179,6 +187,13 @@ const App = () => {
 
   const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
   const currentView = PATH_TO_VIEW_MAP[normalizedPath] || 'landing';
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      trackSeoPageView(`${location.pathname}${location.search}`);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [location.pathname, location.search]);
 
   const resetRepositoryTracking = () => {
     setActiveResumeRecordId(null);
@@ -401,12 +416,15 @@ const App = () => {
     }
   }, []);
 
-  const exampleMatch = normalizedPath.match(/^\/resume-examples\/([^/]+)$/);
-  const resumeExample = exampleMatch
-    ? getResumeExampleRole(decodeURIComponent(exampleMatch[1]))
-    : null;
+  const resumeExample = getResumeSeoExampleByPath(decodeURIComponent(normalizedPath));
+  const resumeGuide = getResumeGuideByPath(decodeURIComponent(normalizedPath));
 
   const startFromSeoPage = (templateId, example = null) => {
+    trackSeoConversion(templateId ? 'seo_template_use' : 'seo_resume_start', {
+      content_group: example?.family || 'seo_hub',
+      content_slug: example?.slug || normalizedPath,
+      template_id: templateId || 'not_selected',
+    });
     resetRepositoryTracking();
     const data = example ? buildRoleResumeData(example) : null;
     setResumeData(data);
@@ -435,20 +453,68 @@ const App = () => {
   };
 
   if (normalizedPath === '/resume-examples') {
-    return <ResumeExamplesIndexPage onStart={() => startFromSeoPage()} />;
+    return <ResumeExamplesIndexPage examples={RESUME_EXAMPLE_ROLES} onStart={() => startFromSeoPage()} />;
+  }
+
+  if (normalizedPath === '/student-resume-examples') {
+    return (
+      <ResumeExamplesIndexPage
+        examples={STUDENT_RESUME_EXAMPLES}
+        title="Student and Fresher Resume Examples"
+        description="Explore editable resume samples for college students, freshers, interns, final-year candidates, and students from leading Indian institutes."
+        eyebrow="Student resume library"
+        canonical="/student-resume-examples"
+        onStart={() => startFromSeoPage()}
+      />
+    );
+  }
+
+  if (normalizedPath === '/resume-templates') {
+    return (
+      <ResumeExamplesIndexPage
+        examples={RESUME_TEMPLATE_EXAMPLES}
+        title="Resume Templates for Every Application"
+        description="Choose an editable ATS-friendly, one-page, modern, professional, or academic resume template and customize it in CareerSense."
+        eyebrow="Resume template library"
+        canonical="/resume-templates"
+        onStart={() => startFromSeoPage()}
+      />
+    );
+  }
+
+  if (normalizedPath === '/resume-guides') {
+    return <ResumeGuidesIndexPage />;
+  }
+
+  if (resumeGuide) {
+    return <ResumeGuidePage guide={resumeGuide} onStart={() => startFromSeoPage()} />;
   }
 
   if (resumeExample) {
     return (
       <ResumeExamplePage
         example={resumeExample}
+        onStart={() => startFromSeoPage()}
         onUseTemplate={(templateId) => startFromSeoPage(templateId, resumeExample)}
       />
     );
   }
 
+  const isKnownAppPath = Object.prototype.hasOwnProperty.call(PATH_TO_VIEW_MAP, normalizedPath);
+
+  if (!isKnownAppPath) {
+    return <NotFoundPage />;
+  }
+
   return (
     <div className="theme-app-shell relative min-h-screen font-sans text-[#071426]">
+      {currentView !== 'landing' ? (
+        <SEO
+          title="CareerSense Resume Workspace"
+          description="Create, edit, tailor, and manage your resume in the private CareerSense workspace."
+          robots="noindex,nofollow"
+        />
+      ) : null}
       <AuthStoreSynchronizer />
       <WelcomeTokensModal />
       {/* VIEW: LANDING */}

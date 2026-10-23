@@ -27,7 +27,8 @@ const SqlTerminalResume = ({ data }) => {
   const MAIN_WIDTH = '118mm';
   const SIDE_WIDTH = '58mm';
   const COLUMN_GAP = '8mm';
-  const CONTENT_HEIGHT = '248mm';
+  // Includes a safety allowance for rounded card heights and loaded fonts.
+  const CONTENT_HEIGHT = '238mm';
 
   const PAGE_BG = '#f8fafc';
   const MAIN_BG = '#ffffff';

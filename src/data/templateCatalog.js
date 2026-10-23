@@ -1,8 +1,12 @@
 import { getTemplateSeoMetadata } from './resumeExampleSeo';
 
 export const TOP_TEMPLATE_IDS = [
-  'Ats', 'minimal', 'formal', 'classic', 'consulting-line',
-  'boardroom-one', 'leadership-signature', 'ceo-brief', 'ocean-ats', 'Academic',
+  'Ats', 'minimal', 'formal', 'classic',
+  'iit', 'iim', 'bits', 'nit',
+  'consulting-line',
+  'boardroom-one', 'leadership-signature', 'ceo-brief', 'ocean-ats', 'Academic', 'xlri',
+  'mdi-gurgaon', 'nmims',
+  'banasthali', 'bhu', 'lpu',
   'executive', 'rule-minimalist', 'professional', 'career-launch', 'associate-prime',
   'japanese', 'card', 'luxe', 'centered-initials', 'Architect',
   'data-scientist', 'engineer', 'product-manager', 'sales', 'professional-columns',
@@ -26,6 +30,16 @@ const TEMPLATE_CATALOG = [
   { id: 'ceo-brief', name: 'CEO Roles', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#b45309', recommended: true },
   { id: 'ocean-ats', name: 'Deep Ocean', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#004B8D', recommended: false },
   { id: 'Academic', name: 'Academic Scholar', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#27272a', recommended: false },
+  { id: 'iit', name: 'IIT Official', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#28359c', recommended: true },
+  { id: 'iim', name: 'IIM Business', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#4b5563', recommended: true },
+  { id: 'bits', name: 'BITS Pilani', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#4b5563', recommended: true },
+  { id: 'xlri', name: 'XLRI Business', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#374151', recommended: true },
+  { id: 'mdi-gurgaon', name: 'MDI Gurgaon', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#101b40', recommended: true },
+  { id: 'nmims', name: 'NMIMS Mumbai', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#214963', recommended: true },
+  { id: 'banasthali', name: 'Banasthali Campus', hasHeadshot: true, graphics: 'Low', columns: '2', color: '#713343', recommended: true },
+  { id: 'bhu', name: 'BHU Academic', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#1f4f78', recommended: true },
+  { id: 'lpu', name: 'LPU Campus', hasHeadshot: true, graphics: 'Low', columns: '2', color: '#063866', recommended: true },
+  { id: 'nit', name: 'NIT Engineering', hasHeadshot: true, graphics: 'Low', columns: '1', color: '#12465c', recommended: true },
 
   { id: 'executive', name: 'Global Executive', hasHeadshot: false, graphics: 'low', columns: '1', color: '#1a1a1a', recommended: true },
   { id: 'rule-minimalist', name: 'Rule Minimalist', hasHeadshot: false, graphics: 'Low', columns: '1', color: '#1e3a8a', recommended: false },
@@ -131,8 +145,28 @@ const topTemplateRank = new Map(
   TOP_TEMPLATE_IDS.map((templateId, index) => [templateId, index])
 );
 
+const STUDENT_TEMPLATE_IDS = new Set([
+  'Academic', 'iit', 'iim', 'bits', 'xlri', 'mdi-gurgaon', 'nmims',
+  'banasthali', 'bhu', 'lpu', 'nit', 'student-notes', 'career-launch',
+  'associate-prime',
+]);
+
+const SERVICE_TEMPLATE_IDS = new Set([
+  'teacher', 'doctor-profile', 'physician-care', 'medical', 'lawyer-trial',
+  'chartered-accountant', 'accounting', 'designer', 'creative', 'marketing',
+  'photographer-resume', 'actor-spotlight', 'chef-menu', 'painter-canvas',
+  'influencer-media-kit', 'youtube-creator', 'motion-designer-board',
+]);
+
+const getTemplateCategory = (templateId) => {
+  if (STUDENT_TEMPLATE_IDS.has(templateId)) return 'Students';
+  if (SERVICE_TEMPLATE_IDS.has(templateId)) return 'Services';
+  return 'Professionals';
+};
+
 export const TEMPLATES = TEMPLATE_CATALOG.map((template) => ({
   ...template,
+  category: getTemplateCategory(template.id),
   ...getTemplateSeoMetadata(template.id),
 })).sort((left, right) => {
   const leftRank = topTemplateRank.get(left.id) ?? Number.MAX_SAFE_INTEGER;

@@ -265,6 +265,14 @@ const PainterCanvas = ({ data }) => {
 
   const projectChunks = chunkArray(projects, 2);
   const educationChunks = chunkArray(education, 2);
+  const needsContinuationPage =
+    experience.length > 3 || projects.length + education.length > 4;
+  const firstPageExperienceCards = needsContinuationPage
+    ? experienceCards.slice(0, 3)
+    : experienceCards;
+  const continuationExperience = needsContinuationPage
+    ? experience.slice(3)
+    : [];
 
   return (
     <div
@@ -585,7 +593,7 @@ const PainterCanvas = ({ data }) => {
                           className="text-[5.9px] font-black uppercase tracking-[0.11em]"
                           style={{ color: COLORS.body }}
                         >
-                          One Page Composition
+                          Imaginative Composition
                         </span>
                       </div>
                     </div>
@@ -602,12 +610,12 @@ const PainterCanvas = ({ data }) => {
                 {experience.length > 0 ? (
                   <div className="mb-3.5">
                     {paintLabel({ title: 'Experience', color: COLORS.ochre })}
-                    <div className="grid grid-cols-1 gap-2.5">{experienceCards}</div>
+                    <div className="grid grid-cols-1 gap-2.5">{firstPageExperienceCards}</div>
                   </div>
                 ) : null}
 
                 <div className="grid grid-cols-2 gap-3">
-                  {projects.length > 0 ? (
+                  {!needsContinuationPage && projects.length > 0 ? (
                     <div>
                       {paintLabel({ title: 'Featured Works', color: COLORS.red, small: true })}
                       <div className="space-y-2">
@@ -644,7 +652,7 @@ const PainterCanvas = ({ data }) => {
                     </div>
                   ) : null}
 
-                  {(education.length > 0 || allRecognition.length > 0) ? (
+                  {!needsContinuationPage && (education.length > 0 || allRecognition.length > 0) ? (
                     <div>
                       {education.length > 0 ? paintLabel({ title: 'Education', color: COLORS.olive, small: true }) : null}
                       {education.length > 0 ? (
@@ -709,9 +717,108 @@ const PainterCanvas = ({ data }) => {
           >
             Confidential
           </span>
-          <span>Page 1 / 1</span>
+          <span>Page 1 / {needsContinuationPage ? 2 : 1}</span>
         </footer>
       </section>
+
+      {needsContinuationPage ? (
+        <section
+          className="relative mx-auto mt-5 h-[297mm] w-[210mm] overflow-hidden shadow-2xl print:mt-0 print:shadow-none"
+          style={{
+            width: '210mm',
+            height: '297mm',
+            padding: '10mm 12mm 14mm',
+            boxSizing: 'border-box',
+            backgroundColor: COLORS.canvas,
+            backgroundImage: `
+              radial-gradient(circle at 10% 12%, rgba(208,90,73,.08), transparent 20%),
+              radial-gradient(circle at 90% 82%, rgba(90,126,163,.08), transparent 20%),
+              repeating-linear-gradient(0deg, rgba(104,81,52,.025) 0px, rgba(104,81,52,.025) 1px, transparent 1px, transparent 4px)
+            `,
+            breakBefore: 'page',
+            pageBreakBefore: 'always',
+          }}
+        >
+          <header className="mb-[5mm] flex items-end justify-between border-b-2 pb-[3mm]" style={{ borderColor: COLORS.border }}>
+            <div>
+              <div className="font-serif text-[18px] font-black italic leading-none" style={{ color: COLORS.ink }}>
+                {personal.name || 'Your Name'}
+              </div>
+              <div className="mt-1.5 text-[6.5px] font-black uppercase tracking-[0.16em]" style={{ color: COLORS.red }}>
+                Painter Canvas · Continued Portfolio
+              </div>
+            </div>
+            <div className="rounded-[10px] border bg-white/60 px-3 py-1.5 text-[6px] font-black uppercase tracking-[0.12em]" style={{ borderColor: COLORS.border, color: COLORS.body }}>
+              Page 2 / 2
+            </div>
+          </header>
+
+          <div className="grid grid-cols-2 items-start gap-[6mm]">
+            <main>
+              {continuationExperience.length > 0 ? (
+                <section>
+                  {paintLabel({ title: 'Experience · Continued', color: COLORS.ochre })}
+                  <div className="space-y-2.5">
+                    {experienceCards.slice(3)}
+                  </div>
+                </section>
+              ) : null}
+
+              {projects.length > 0 ? (
+                <section className={continuationExperience.length ? 'mt-4' : ''}>
+                  {paintLabel({ title: 'Featured Works', color: COLORS.red })}
+                  <div className="space-y-2.5">
+                    {projects.map((item, index) => (
+                      <article key={item.id || `continued-project-${index}`} className="relative rounded-[14px] border px-3.5 py-3" style={paperCardStyle}>
+                        <div className="absolute left-0 top-0 h-full w-[4px] rounded-l-[14px]" style={{ backgroundColor: PAINTS[(index + 1) % PAINTS.length] }} />
+                        <div className="text-[7.2px] font-black uppercase tracking-[0.07em]" style={{ color: COLORS.ink }}>{item.name}</div>
+                        {item.desc ? <div className="mt-1.5 whitespace-pre-wrap text-[6.5px] font-medium leading-[1.4]" style={{ color: COLORS.body }}>{item.desc}</div> : null}
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+            </main>
+
+            <aside>
+              {education.length > 0 ? (
+                <section>
+                  {paintLabel({ title: 'Education', color: COLORS.olive })}
+                  <div className="space-y-2.5">
+                    {education.map((item, index) => (
+                      <article key={item.id || `continued-education-${index}`} className="relative rounded-[14px] border px-3.5 py-3" style={paperCardStyle}>
+                        <div className="absolute left-0 top-0 h-full w-[4px] rounded-l-[14px]" style={{ backgroundColor: PAINTS[(index + 2) % PAINTS.length] }} />
+                        <div className="text-[7.3px] font-black leading-[1.3]" style={{ color: COLORS.ink }}>{item.school || item.degree}</div>
+                        {item.school && item.degree ? <div className="mt-1 text-[6.5px] font-bold" style={{ color: COLORS.olive }}>{item.degree}</div> : null}
+                        {item.date ? <div className="mt-1 text-[5.8px] font-bold uppercase tracking-[0.07em]" style={{ color: COLORS.muted }}>{item.date}</div> : null}
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              {allRecognition.length > 0 ? (
+                <section className="mt-4">
+                  {paintLabel({ title: 'Recognition & Credentials', color: COLORS.plum })}
+                  <div className="space-y-2">
+                    {allRecognition.map((item, index) => (
+                      <div key={`${item.type}-${item.id || index}-continued`} className="rounded-[12px] border px-3 py-2.5" style={paperCardStyle}>
+                        <div className="text-[6.8px] font-bold leading-[1.3]" style={{ color: COLORS.ink }}>{item.name}</div>
+                        {(item.issuer || item.date) ? <div className="mt-1 text-[5.8px]" style={{ color: COLORS.muted }}>{[item.issuer, item.date].filter(Boolean).join(' • ')}</div> : null}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+            </aside>
+          </div>
+
+          <footer className="absolute bottom-[3.5mm] left-[12mm] right-[12mm] flex items-center justify-between border-t pt-1.5 text-[5.7px] font-black uppercase tracking-[0.09em]" style={{ borderColor: COLORS.border, color: COLORS.muted }}>
+            <span className="font-serif italic normal-case tracking-normal" style={{ color: COLORS.ink }}>Confidential</span>
+            <span>Page 2 / 2</span>
+          </footer>
+        </section>
+      ) : null}
 
       <style>{`
         @page {

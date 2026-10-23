@@ -7,8 +7,11 @@ import './index.css'
 import { HelmetProvider } from 'react-helmet-async'
 import { ThemeProvider } from './theme/ThemeProvider.jsx'
 import CSLogo from './assets/cs_logo.png'
+import { initializeSeoAnalytics } from './utils/seoAnalytics.js'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+initializeSeoAnalytics()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

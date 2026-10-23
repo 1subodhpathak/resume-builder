@@ -177,7 +177,8 @@ const ConsultingLine = ({ data }) => {
   // ---------------------------------------------------------------------------
   // LEFT COLUMN STREAM
   // Skills -> Education -> Projects -> Certifications -> Awards -> Languages
-  // Contact stays fixed on Page 1, like the supplied reference.
+  // Contact details live in the first-page header so the sidebar can be used
+  // entirely for qualifications and supporting information.
   // ---------------------------------------------------------------------------
   const leftBlocks = useMemo(() => {
     const blocks = [];
@@ -317,6 +318,16 @@ const ConsultingLine = ({ data }) => {
   // ---------------------------------------------------------------------------
   // TOP HEADER
   // ---------------------------------------------------------------------------
+  const headerContactItems = [
+    { key: 'phone', value: personal.phone, icon: Phone },
+    { key: 'email', value: personal.email, icon: Mail },
+    { key: 'location', value: personal.location, icon: MapPin },
+    { key: 'linkedin', value: personal.linkedin, icon: LinkIcon },
+    { key: 'github', value: personal.github, icon: Github },
+    { key: 'portfolio', value: personal.portfolio, icon: Globe },
+    { key: 'website', value: personal.website, icon: Globe },
+  ].filter((item) => item.value);
+
   const FullHeader = ({
     measurement = false,
   }) => (
@@ -380,22 +391,39 @@ const ConsultingLine = ({ data }) => {
         ) : null}
       </div>
 
-      {/* RIGHT LABEL AREA */}
-      <div className="absolute right-[11mm] top-[14mm] w-[50mm] text-right">
+      {/* RIGHT CONTACT AREA */}
+      <div className="absolute right-[9mm] top-[7mm] w-[58mm]">
         <div
-          className="text-[7.8px] font-black uppercase tracking-[0.13em]"
+          className="text-right text-[7.2px] font-black uppercase tracking-[0.13em]"
           style={{ color: GOLD_SOFT }}
         >
-          User Profile
+          Contact
         </div>
 
         <div
-          className="ml-auto mt-3 h-[1.1mm] w-[20mm]"
+          className="ml-auto mt-1.5 h-[0.8mm] w-[18mm]"
           style={{ backgroundColor: GOLD }}
         />
 
-        <div className="mt-3 text-[7.5px] font-medium leading-[1.5] text-white/72">
-          
+        <div className="mt-2 grid grid-cols-1 gap-y-1.5">
+          {headerContactItems.map(({ key, value, icon: Icon }) => (
+            <div key={key} className="flex min-w-0 items-center justify-end gap-2 text-right">
+              <Icon size={8} className="shrink-0" style={{ color: GOLD_SOFT }} />
+              {measurement ? (
+                <span className="min-w-0 break-all text-[6.2px] font-semibold leading-[1.2] text-white/80">
+                  {value}
+                </span>
+              ) : (
+                <PreviewEditableField
+                  path={`personal.${key}`}
+                  label={key === 'github' ? 'GitHub' : key[0].toUpperCase() + key.slice(1)}
+                  className="min-w-0 break-all text-[6.2px] font-semibold leading-[1.2] text-white/80"
+                >
+                  {value}
+                </PreviewEditableField>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -1341,10 +1369,6 @@ const ConsultingLine = ({ data }) => {
 
   const renderLeftPage = (page, pageIndex) => (
     <>
-      {pageIndex === 0 ? (
-        <ContactBlock />
-      ) : null}
-
       {page.blocks.map((block, blockIndex) => {
         const previous = page.blocks[blockIndex - 1];
 
@@ -1440,8 +1464,6 @@ const ConsultingLine = ({ data }) => {
 
         {/* LEFT */}
         <div style={{ width: LEFT_INNER_WIDTH }}>
-          <ContactBlock measurement />
-
           {[
             'Core Skills',
             'Key Credentials',
