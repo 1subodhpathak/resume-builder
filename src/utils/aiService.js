@@ -1,6 +1,7 @@
 import Groq from "groq-sdk";
 import * as pdfjsLib from "pdfjs-dist";
 import mammoth from "mammoth";
+import { cleanAndParseJson } from "./aiJsonParser";
 
 // Initialize Groq
 // ⚠️ IMPORTANT: Replace 'YOUR_API_KEY' with your actual Groq API Key,
@@ -88,7 +89,7 @@ export const analyzeResumeWithGroq = async (resumeText) => {
       response_format: { type: "json_object" }, 
     });
 
-    return JSON.parse(completion.choices[0].message.content);
+    return cleanAndParseJson(completion.choices[0].message.content);
   } catch (error) {
     console.error("AI Parse Error:", error);
     return null;

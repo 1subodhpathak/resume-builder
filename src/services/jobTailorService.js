@@ -107,6 +107,7 @@ import {
   normalizeResumeDataForDelivery,
 } from "./resumePrompting";
 import { recordAiTokenUsage } from "./resumeRepositoryService";
+import { cleanAndParseJson } from "../utils/aiJsonParser";
 
 const recordOpenAIUsage = (operation, completion, metadata = {}) => {
   recordAiTokenUsage({
@@ -159,7 +160,7 @@ export const phase1_ExtractResume = async (rawText) => {
     operation: 'Resume Extraction',
   });
   recordOpenAIUsage('tailor_phase_extract_resume', completion);
-  const extractedResume = JSON.parse(completion.choices[0].message.content);
+  const extractedResume = cleanAndParseJson(completion.choices[0].message.content);
 
   return {
     ...extractedResume,
@@ -186,7 +187,7 @@ export const phase2_AnalyzeJD = async (jdText) => {
   recordOpenAIUsage('tailor_phase_analyze_jd', completion, {
     jdLedOptimization: true,
   });
-  return JSON.parse(completion.choices[0].message.content);
+  return cleanAndParseJson(completion.choices[0].message.content);
 };
 
 // PHASE 3: Tailor Resume to JD
@@ -206,7 +207,7 @@ export const phase3_TailorResume = async (resumeJson, jdAnalysisJson, rawJobDesc
     jdLedOptimization: true,
   });
   
-  const tailoredData = JSON.parse(completion.choices[0].message.content);
+  const tailoredData = cleanAndParseJson(completion.choices[0].message.content);
 
   const factSafeTailoredData = {
     ...resumeJson,

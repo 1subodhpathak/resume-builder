@@ -76,7 +76,23 @@ export const createBackendChatCompletion = async ({
     );
   }
 
-  return await response.json();
+  const result = await response.json();
+
+  if (Array.isArray(result?.choices)) {
+    result.choices.forEach((choice) => {
+      if (typeof choice?.message?.content === 'string') {
+        const trimmed = choice.message.content.trim();
+        if (trimmed.startsWith('```')) {
+          choice.message.content = trimmed
+            .replace(/^```(?:json|JSON)?\s*\n?/i, '')
+            .replace(/\n?\s*```\s*$/i, '')
+            .trim();
+        }
+      }
+    });
+  }
+
+  return result;
 };
 
 export const getOpenAIClient = () => {

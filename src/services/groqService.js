@@ -11,6 +11,7 @@ import {
   OPENAI_MODEL,
 } from "./openaiClient";
 import { recordAiTokenUsage } from "./resumeRepositoryService";
+import { cleanAndParseJson } from "../utils/aiJsonParser";
 
 const MAX_RESUME_TEXT_CHARS = 50000;
 const EXACT_IMPORT_CHUNK_CHARS = 30000;
@@ -156,7 +157,7 @@ export const extractResumeData = async (rawText, options = {}) => {
     variant: 'standard',
   });
 
-  const parsedData = JSON.parse(completion.choices[0].message.content);
+  const parsedData = cleanAndParseJson(completion.choices[0].message.content);
   const correctedData = applyResumeSourceCorrections(parsedData, rawText);
 
   if (options.preserveFullContent) {
@@ -191,7 +192,7 @@ export const extractResumeDataVerbatim = async (rawText) => {
       chunkCount: chunks.length,
     });
 
-    chunkResults.push(JSON.parse(completion.choices[0].message.content));
+    chunkResults.push(cleanAndParseJson(completion.choices[0].message.content));
   }
 
   // Exact Import intentionally bypasses normalizeResumeDataForDelivery: that
@@ -222,7 +223,7 @@ export const enhanceResumeData = async (jsonData, options = {}) => {
       fullSourceContentPreserved: true,
     });
 
-    const enhancedData = JSON.parse(completion.choices[0].message.content);
+    const enhancedData = cleanAndParseJson(completion.choices[0].message.content);
     enhancedData.personal = {
       ...(jsonData.personal || {}),
       ...(enhancedData.personal || {}),
@@ -294,7 +295,7 @@ export const generateTextVariations = async (currentText, contextType, jobTitleO
       focusLabel: options.focusLabel || '',
     });
 
-    const parsed = JSON.parse(completion.choices[0].message.content);
+    const parsed = cleanAndParseJson(completion.choices[0].message.content);
     return parsed.variations || [];
 
   } catch (error) {
@@ -338,7 +339,7 @@ ${JSON.stringify(resumeData)}
 
     recordOpenAICompletionUsage('calculate_ats_score', completion);
 
-    return JSON.parse(completion.choices[0].message.content);
+    return cleanAndParseJson(completion.choices[0].message.content);
   } catch (error) {
     console.error("ATS Scoring failed:", error);
     throw error;
@@ -383,7 +384,7 @@ ${JSON.stringify(resumeData)}
 
     recordOpenAICompletionUsage('generate_interview_prep', completion);
 
-    return JSON.parse(completion.choices[0].message.content);
+    return cleanAndParseJson(completion.choices[0].message.content);
   } catch (error) {
     console.error("Interview Prep generation failed:", error);
     throw error;
