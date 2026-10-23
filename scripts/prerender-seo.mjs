@@ -36,7 +36,40 @@ const renderPage = ({ path, title, description, body, schema }) => {
     <meta property="og:description" content="${escapeHtml(description)}" />
     <meta property="og:url" content="${canonical}" />
     <meta name="twitter:card" content="summary" />
+    <style>@keyframes cs-spin{to{transform:rotate(360deg)}}body{margin:0;background-color:#F7F8FA;}</style>
     <script type="application/ld+json">${escapeJson(schema)}</script>`;
+
+  const prerenderBody = `
+  <div id="root">
+    <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #F7F8FA; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #071426;">
+      <div style="width: 40px; height: 40px; border: 3px solid #E1E7EF; border-top-color: #071426; border-radius: 50%; animation: cs-spin 0.8s linear infinite;"></div>
+      <div style="margin-top: 14px; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: #475569; text-transform: uppercase;">CareerSense</div>
+    </div>
+  </div>
+  <noscript>
+    <style>
+      #root { display: none !important; }
+      .cs-seo-fallback {
+        max-width: 960px;
+        margin: 40px auto;
+        padding: 24px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #071426;
+        line-height: 1.6;
+      }
+      .cs-seo-fallback h1 { font-size: 28px; font-weight: 700; color: #071426; margin-bottom: 16px; }
+      .cs-seo-fallback h2 { font-size: 20px; font-weight: 600; color: #123B6D; margin-top: 24px; margin-bottom: 12px; }
+      .cs-seo-fallback h3 { font-size: 16px; font-weight: 600; color: #071426; margin-top: 16px; }
+      .cs-seo-fallback p { color: #475569; margin-bottom: 16px; }
+      .cs-seo-fallback a { color: #123B6D; font-weight: 600; text-decoration: underline; }
+      .cs-seo-fallback ul { padding-left: 20px; margin-bottom: 20px; }
+      .cs-seo-fallback li { margin-bottom: 8px; color: #334155; }
+      .cs-seo-fallback nav { margin-bottom: 24px; font-size: 14px; color: #64748B; }
+    </style>
+    <div class="cs-seo-fallback">
+      ${body}
+    </div>
+  </noscript>`;
 
   return baseHtml
     .replace(/<title>[\s\S]*?<\/title>/i, '')
@@ -45,7 +78,7 @@ const renderPage = ({ path, title, description, body, schema }) => {
     .replace(/<link rel="canonical"[\s\S]*?>/i, '')
     .replace(/<meta property="og:[\s\S]*?>/gi, '')
     .replace('</head>', `${head}\n</head>`)
-    .replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+    .replace('<div id="root"></div>', prerenderBody);
 };
 
 const collections = [
