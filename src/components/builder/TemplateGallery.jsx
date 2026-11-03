@@ -426,6 +426,12 @@ const TemplateGallery = ({
   const closeHelpTour = useCallback(() => setHelpTourStep(null), []);
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  }, []);
+
+  useEffect(() => {
     if (helpTourStep === null) return undefined;
     if (helpTourStep === 1) setIsFiltersCollapsed(false);
     const step = TEMPLATE_HELP_STEPS[helpTourStep];
@@ -502,6 +508,9 @@ const TemplateGallery = ({
       ),
     [rankedTemplates]
   );
+
+  const [visibleCount, setVisibleCount] = useState(16);
+  const loadMoreRef = useRef(null);
 
   const hasImportedResume = Boolean(resumeData);
 
@@ -627,6 +636,35 @@ const TemplateGallery = ({
       ).length,
     []
   );
+
+  // Progressive rendering: reset limit on filter/search change
+  useEffect(() => {
+    setVisibleCount(16);
+  }, [filters, searchTerm]);
+
+  const displayedTemplates = useMemo(
+    () => filteredTemplates.slice(0, visibleCount),
+    [filteredTemplates, visibleCount]
+  );
+
+  // Infinite scroll trigger: load more when bottom sentinel enters viewport
+  useEffect(() => {
+    const node = loadMoreRef.current;
+    if (!node) return undefined;
+    if (typeof IntersectionObserver === 'undefined') return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisibleCount((prev) => Math.min(prev + 16, filteredTemplates.length));
+        }
+      },
+      { rootMargin: '400px 0px' }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [filteredTemplates.length]);
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(rgba(18,59,109,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(18,59,109,0.03)_1px,transparent_1px),radial-gradient(circle_at_84%_4%,rgba(18,59,109,0.12),transparent_33%),radial-gradient(circle_at_10%_12%,rgba(185,150,74,0.08),transparent_28%),linear-gradient(180deg,#F8FAFC_0%,#F2F5F8_100%)] bg-[size:36px_36px,36px_36px,auto,auto,auto] font-sans text-[#071426]">
       <style>{`
@@ -945,15 +983,29 @@ const TemplateGallery = ({
           </section>
 
           {filteredTemplates.length > 0 ? (
-            <section data-help-tour="template-gallery" className="grid w-full max-w-full min-w-0 grid-cols-1 gap-x-4 gap-y-7 pb-16 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-              {filteredTemplates.map((template) => (
-                <TemplateCard
-                  key={template.id}
-                  template={template}
-                  onSelect={handleTemplateSelect}
-                />
-              ))}
-            </section>
+            <>
+              <section data-help-tour="template-gallery" className="grid w-full max-w-full min-w-0 grid-cols-1 gap-x-4 gap-y-7 pb-8 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                {displayedTemplates.map((template) => (
+                  <TemplateCard
+                    key={template.id}
+                    template={template}
+                    onSelect={handleTemplateSelect}
+                  />
+                ))}
+              </section>
+
+              {visibleCount < filteredTemplates.length ? (
+                <div ref={loadMoreRef} className="pb-16 pt-2 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount((prev) => Math.min(prev + 16, filteredTemplates.length))}
+                    className="inline-flex items-center gap-2 rounded-xl border border-[#D6E0EA] bg-white px-5 py-2.5 text-xs font-bold text-[#173A62] shadow-sm hover:border-[#123B6D]/30 hover:bg-[#F8FAFC]"
+                  >
+                    Load more templates ({filteredTemplates.length - visibleCount} remaining)
+                  </button>
+                </div>
+              ) : null}
+            </>
           ) : (
             <section className="rounded-[1rem] border border-[#DCE4EC] bg-white/95 px-6 py-14 text-center shadow-[0_10px_28px_rgba(15,43,75,0.055)] backdrop-blur-xl">
               <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2F6FB] text-[#CBD5E1]">

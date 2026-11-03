@@ -200,6 +200,22 @@ const App = () => {
   // Resume pending template selection after sign-in
   useEffect(() => {
     if (isLoaded && isSignedIn && typeof window !== 'undefined') {
+      const pendingStarter = sessionStorage.getItem('pending_starter_resume_data');
+      if (pendingStarter) {
+        sessionStorage.removeItem('pending_starter_resume_data');
+        try {
+          const parsed = JSON.parse(pendingStarter);
+          if (parsed?.data) {
+            setResumeData(parsed.data);
+            if (parsed.templateId) {
+              setSelectedTemplate(parsed.templateId);
+            }
+          }
+        } catch (e) {
+          // ignore
+        }
+      }
+
       const pendingRedirect = sessionStorage.getItem('pending_template_redirect');
       if (pendingRedirect) {
         sessionStorage.removeItem('pending_template_redirect');
@@ -445,6 +461,36 @@ const App = () => {
     });
     resetRepositoryTracking();
     const data = example ? buildRoleResumeData(example) : null;
+
+    if (!isSignedIn) {
+      const targetUrl = templateId
+        ? `/builder?template=${encodeURIComponent(templateId)}`
+        : '/select';
+
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('pending_template_redirect', targetUrl);
+        if (data) {
+          try {
+            sessionStorage.setItem('pending_starter_resume_data', JSON.stringify({ data, templateId }));
+          } catch (e) {
+            // ignore
+          }
+        }
+      }
+
+      if (openSignIn) {
+        openSignIn({
+          fallbackRedirectUrl: targetUrl,
+          forceRedirectUrl: targetUrl,
+          signUpFallbackRedirectUrl: targetUrl,
+          signUpForceRedirectUrl: targetUrl,
+        });
+      } else {
+        navigate(targetUrl);
+      }
+      return;
+    }
+
     setResumeData(data);
     setSelectedMode('scratch');
     setResumeImportMode('ai-enhanced');
@@ -561,6 +607,24 @@ const App = () => {
                 navigate('/templates');
               }}
               onUseTemplate={(templateId) => {
+                if (!isSignedIn) {
+                  const targetUrl = `/builder?template=${encodeURIComponent(templateId)}`;
+                  if (typeof window !== 'undefined') {
+                    sessionStorage.setItem('pending_template_redirect', targetUrl);
+                  }
+                  if (openSignIn) {
+                    openSignIn({
+                      fallbackRedirectUrl: targetUrl,
+                      forceRedirectUrl: targetUrl,
+                      signUpFallbackRedirectUrl: targetUrl,
+                      signUpForceRedirectUrl: targetUrl,
+                    });
+                  } else {
+                    navigate(targetUrl);
+                  }
+                  return;
+                }
+
                 resetRepositoryTracking();
                 setResumeData(null);
                 setSelectedMode('scratch');

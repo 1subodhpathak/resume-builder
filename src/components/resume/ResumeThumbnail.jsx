@@ -25,6 +25,8 @@ const ResumeThumbnail = ({ data, templateId }) => {
   }, []);
 
   useEffect(() => {
+    if (!isNearViewport) return undefined;
+
     const handleResize = () => {
       if (containerRef.current) {
         const containerWidth = containerRef.current.offsetWidth;
@@ -36,13 +38,13 @@ const ResumeThumbnail = ({ data, templateId }) => {
       }
     };
 
-    // Calculate immediately
+    // Calculate immediately when visible
     handleResize();
 
     // Recalculate on window resize
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isNearViewport]);
 
   return (
     <div 
