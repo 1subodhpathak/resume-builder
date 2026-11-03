@@ -8,7 +8,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { useAuth, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
+import { useAuth, useUser, useClerk, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
 
 // --- LANDING COMPONENTS (The Dark UI) ---
 import ResumeBuilderLanding from './components/landing/pages/ResumeBuilderLanding';
@@ -166,6 +166,8 @@ const LoadingStep = ({
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isLoaded, isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
   const [resumeData, setResumeData] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState('professional');
   const [selectedMode, setSelectedMode] = useState(null);
@@ -194,6 +196,17 @@ const App = () => {
     }, 0);
     return () => window.clearTimeout(timer);
   }, [location.pathname, location.search]);
+
+  // Resume pending template selection after sign-in
+  useEffect(() => {
+    if (isLoaded && isSignedIn && typeof window !== 'undefined') {
+      const pendingRedirect = sessionStorage.getItem('pending_template_redirect');
+      if (pendingRedirect) {
+        sessionStorage.removeItem('pending_template_redirect');
+        navigate(pendingRedirect);
+      }
+    }
+  }, [isLoaded, isSignedIn, navigate]);
 
   const resetRepositoryTracking = () => {
     setActiveResumeRecordId(null);
@@ -243,8 +256,13 @@ const App = () => {
             setCurrentJDText(record.jdText);
           }
         }
-      } else if (template && template !== selectedTemplate && !activeResumeRecordId) {
-        setSelectedTemplate(template);
+      } else if (template && !activeResumeRecordId) {
+        if (template !== selectedTemplate) {
+          setSelectedTemplate(template);
+        }
+        if (!selectedMode) {
+          setSelectedMode('scratch');
+        }
       }
     }
   }, [currentView, location.search, activeResumeRecordId, selectedTemplate]);
@@ -510,9 +528,17 @@ const App = () => {
     <div className="theme-app-shell relative min-h-screen font-sans text-[#071426]">
       {currentView !== 'landing' ? (
         <SEO
-          title="CareerSense Resume Workspace"
-          description="Create, edit, tailor, and manage your resume in the private CareerSense workspace."
-          robots="noindex,nofollow"
+          title={
+            currentView === 'gallery'
+              ? 'Free ATS Resume Templates & Builder Gallery | CareerSense'
+              : 'CareerSense Resume Workspace'
+          }
+          description={
+            currentView === 'gallery'
+              ? 'Browse 100+ professional, modern, and ATS-friendly resume templates. Pick a design and start building your resume with AI.'
+              : 'Create, edit, tailor, and manage your resume in the private CareerSense workspace.'
+          }
+          robots={currentView === 'gallery' ? 'index,follow' : 'noindex,nofollow'}
         />
       ) : null}
       <AuthStoreSynchronizer />
@@ -734,56 +760,67 @@ const App = () => {
 
           {/* VIEW: GALLERY */}
           {currentView === 'gallery' && (
-            <>
-              <SignedIn>
-                <TemplateGallery
-                  resumeData={resumeData}
-                  mode={selectedMode}
-                  jdText={currentJDText}
-                  onHome={() => navigateToLandingSection('top')}
-                  onOpenRepository={(tab) => openRepository('gallery', tab || 'dashboard')}
-                  onSelectTemplate={(tpl, options = {}) => {
-                    setBuilderReturnView('gallery');
+            <TemplateGallery
+              resumeData={resumeData}
+              mode={selectedMode}
+              jdText={currentJDText}
+              onHome={() => navigateToLandingSection('top')}
+              onOpenRepository={(tab) => openRepository('gallery', tab || 'dashboard')}
+              onSelectTemplate={(tpl, options = {}) => {
+                if (!isSignedIn) {
+                  const targetUrl = `/builder?template=${encodeURIComponent(tpl)}`;
+                  if (typeof window !== 'undefined') {
+                    sessionStorage.setItem('pending_template_redirect', targetUrl);
+                  }
+                  if (openSignIn) {
+                    openSignIn({
+                      fallbackRedirectUrl: targetUrl,
+                      forceRedirectUrl: targetUrl,
+                      signUpFallbackRedirectUrl: targetUrl,
+                      signUpForceRedirectUrl: targetUrl,
+                    });
+                  } else {
+                    navigate(targetUrl);
+                  }
+                  return;
+                }
 
-                    const currentData = options.resumeDataOverride || resumeData;
-                    if (options.resumeDataOverride) {
-                      setResumeData(options.resumeDataOverride);
-                    }
+                setBuilderReturnView('gallery');
 
-                    setBuilderEntrySmartAction(options.actionId || '');
-                    setBuilderEntrySmartActionDetails(options.actionDetails || null);
-                    setSelectedTemplate(tpl);
+                const currentData = options.resumeDataOverride || resumeData;
+                if (options.resumeDataOverride) {
+                  setResumeData(options.resumeDataOverride);
+                }
 
-                    let targetId = activeResumeRecordId;
-                    if (currentData) {
-                      const savedRecord = saveResumeRecord({
-                        resumeId: activeResumeRecordId,
-                        resumeData: currentData,
-                        selectedTemplate: tpl,
-                        mode: selectedMode || 'scratch',
-                        importMode: resumeImportMode,
-                        jdText: currentJDText,
-                      });
-                      if (savedRecord?.id) {
-                        targetId = savedRecord.id;
-                        setActiveResumeRecordId(savedRecord.id);
-                      }
-                    }
+                setBuilderEntrySmartAction(options.actionId || '');
+                setBuilderEntrySmartActionDetails(options.actionDetails || null);
+                setSelectedTemplate(tpl);
 
-                    const queryParams = new URLSearchParams();
-                    queryParams.set('template', tpl);
-                    if (targetId) {
-                      queryParams.set('id', targetId);
-                    }
-                    navigate(`/builder?${queryParams.toString()}`);
-                  }}
-                  onBack={handleBack}
-                />
-              </SignedIn>
-              <SignedOut>
-                <RedirectToSignIn />
-              </SignedOut>
-            </>
+                let targetId = activeResumeRecordId;
+                if (currentData) {
+                  const savedRecord = saveResumeRecord({
+                    resumeId: activeResumeRecordId,
+                    resumeData: currentData,
+                    selectedTemplate: tpl,
+                    mode: selectedMode || 'scratch',
+                    importMode: resumeImportMode,
+                    jdText: currentJDText,
+                  });
+                  if (savedRecord?.id) {
+                    targetId = savedRecord.id;
+                    setActiveResumeRecordId(savedRecord.id);
+                  }
+                }
+
+                const queryParams = new URLSearchParams();
+                queryParams.set('template', tpl);
+                if (targetId) {
+                  queryParams.set('id', targetId);
+                }
+                navigate(`/builder?${queryParams.toString()}`);
+              }}
+              onBack={handleBack}
+            />
           )}
 
           {/* VIEW: REPOSITORY */}

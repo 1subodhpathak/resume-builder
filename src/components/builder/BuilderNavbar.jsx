@@ -245,16 +245,18 @@ const BuilderNavbar = ({
             </button>
           ) : null}
 
-          {onBack ? (
-            <button
-              type="button"
-              onClick={onBack}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#071426] px-4 text-xs font-semibold text-white shadow-sm transition hover:bg-[#123B6D]"
-            >
-              <ArrowLeft size={14} />
-              Back
-            </button>
-          ) : null}
+          <SignedIn>
+            {onBack ? (
+              <button
+                type="button"
+                onClick={onBack}
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#071426] px-4 text-xs font-semibold text-white shadow-sm transition hover:bg-[#123B6D]"
+              >
+                <ArrowLeft size={14} />
+                Back
+              </button>
+            ) : null}
+          </SignedIn>
 
           <SignedIn>
             <div className="ml-1 flex items-center">
