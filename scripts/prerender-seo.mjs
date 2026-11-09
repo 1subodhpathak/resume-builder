@@ -131,6 +131,32 @@ pages.push({
   },
 });
 
+const templatesPageDescription = 'Browse 100+ professional, modern, and ATS-friendly resume templates. Pick a design and start building your resume with AI.';
+pages.push({
+  path: '/templates',
+  title: 'Free ATS Resume Templates & Builder Gallery | CareerSense',
+  description: templatesPageDescription,
+  body: `<main><nav><a href="/">Home</a> / Resume Templates</nav><h1>Free ATS Resume Templates & Builder Gallery</h1><p>${escapeHtml(templatesPageDescription)}</p><h2>Template Categories</h2><ul><li><strong>ATS-Compliant Templates:</strong> Clean, machine-readable layouts optimized to pass applicant tracking filters.</li><li><strong>Professional & Executive:</strong> Sleek corporate formats tailored for senior professionals and management roles.</li><li><strong>Modern & Creative:</strong> Distinctive two-column and visual designs for designers, marketers, and developers.</li><li><strong>Student & Entry-Level:</strong> Simple, education-first formats for freshers, college students, and interns.</li></ul><h2>Key Features</h2><ul><li>Instant live editing with real-time preview</li><li>1-click PDF download with crisp vector fonts</li><li>Built-in AI bullet points and skill recommendations</li><li>Switch templates at any time without losing your content</li></ul><p><a href="/templates">Explore the live Template Gallery</a> or <a href="/">start building your resume now</a>.</p></main>`,
+  schema: {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        name: 'Free ATS Resume Templates & Builder Gallery',
+        description: templatesPageDescription,
+        url: `${siteUrl}/templates`,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+          { '@type': 'ListItem', position: 2, name: 'Templates', item: `${siteUrl}/templates` },
+        ],
+      },
+    ],
+  },
+});
+
 for (const guide of RESUME_GUIDES) {
   pages.push({
     path: guide.path,
@@ -231,6 +257,7 @@ await writeFile(
 
 const priorityPaths = [
   '/',
+  '/templates',
   '/resume-examples',
   '/student-resume-examples',
   '/resume-templates',
