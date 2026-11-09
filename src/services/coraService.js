@@ -1,4 +1,3 @@
-import { getOpenAIClient, OPENAI_MODEL } from './openaiClient';
 import { recordAiTokenUsage } from './resumeRepositoryService';
 
 export const CORA_MAX_QUESTION_CHARS = 240;
@@ -26,6 +25,7 @@ export const askCora = async (question) => {
     throw new Error(`Keep your question under ${CORA_MAX_QUESTION_WORDS} words.`);
   }
 
+  const { getOpenAIClient, OPENAI_MODEL } = await import('./openaiClient');
   const openai = getOpenAIClient();
   const completion = await openai.chat.completions.create({
     model: OPENAI_MODEL,

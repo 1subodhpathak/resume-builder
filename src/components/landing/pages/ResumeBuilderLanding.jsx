@@ -1,8 +1,9 @@
+import React from 'react';
 import Navbar from '../layout/Navbar.jsx';
 import Footer from '../layout/Footer.jsx';
 import SEO from '../../SEO.jsx';
 import FAQSection from '../sections/FAQSection.jsx';
-import CoraChatbot from '../features/CoraChatbot.jsx';
+const CoraChatbot = React.lazy(() => import('../features/CoraChatbot.jsx'));
 import FinalCtaSection from '../sections/FinalCtaSection.jsx';
 import HeroSection from '../sections/HeroSection.jsx';
 import HowItWorksSection from '../sections/HowItWorksSection.jsx';
@@ -87,11 +88,13 @@ const ResumeBuilderLanding = ({
         onStart={onStart}
         onViewTemplates={onViewTemplates}
       />
-      <CoraChatbot
-        onOpenRepository={onOpenRepository}
-        onStart={onStart}
-        onViewTemplates={onViewTemplates}
-      />
+      <React.Suspense fallback={null}>
+        <CoraChatbot
+          onOpenRepository={onOpenRepository}
+          onStart={onStart}
+          onViewTemplates={onViewTemplates}
+        />
+      </React.Suspense>
     </div>
   );
 };
