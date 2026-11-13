@@ -1,6 +1,7 @@
 {
   "routes": [
     { "handle": "filesystem" },
+    { "src": "/(dashboard|select|upload|upload-options|tailor|target|jd-upload|review|builder|editor)(.*)", "dest": "/app.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

@@ -12,11 +12,10 @@ import { useAuth, useUser, useClerk, SignedIn, SignedOut, RedirectToSignIn } fro
 
 // --- LANDING COMPONENTS (The Dark UI) ---
 import ResumeBuilderLanding from './components/landing/pages/ResumeBuilderLanding';
-const ResumeExamplesIndexPage = React.lazy(() => import('./components/landing/pages/ResumeExamplesIndexPage'));
-const ResumeExamplePage = React.lazy(() => import('./components/landing/pages/ResumeExamplePage'));
-const NotFoundPage = React.lazy(() => import('./components/landing/pages/NotFoundPage'));
-const ResumeGuidePage = React.lazy(() => import('./components/landing/pages/ResumeGuidesPage').then(m => ({ default: m.ResumeGuidePage })));
-const ResumeGuidesIndexPage = React.lazy(() => import('./components/landing/pages/ResumeGuidesPage').then(m => ({ default: m.ResumeGuidesIndexPage })));
+import ResumeExamplesIndexPage from './components/landing/pages/ResumeExamplesIndexPage';
+import ResumeExamplePage from './components/landing/pages/ResumeExamplePage';
+import NotFoundPage from './components/landing/pages/NotFoundPage';
+import { ResumeGuidePage, ResumeGuidesIndexPage } from './components/landing/pages/ResumeGuidesPage';
 import SEO from './components/SEO';
 const ResumeSelection = React.lazy(() => import('./components/builder/ResumeSelection'));
 const ResumeUpload = React.lazy(() => import('./components/landing/features/ResumeUpload'));
@@ -26,8 +25,8 @@ const JDUpload = React.lazy(() => import('./components/landing/features/JDUpload
 const TargetedResumeUI = React.lazy(() => import('./components/resume/TargetedResumeUI'));
 
 // --- BUILDER COMPONENTS (The Clean UI) ---
+import TemplateGallery from './components/builder/TemplateGallery';
 const ResumeImportOptions = React.lazy(() => import('./components/builder/ResumeImportOptions'));
-const TemplateGallery = React.lazy(() => import('./components/builder/TemplateGallery'));
 const Editor = React.lazy(() => import('./components/builder/Editor'));
 const DataReview = React.lazy(() => import('./components/builder/DataReview'));
 const ResumeRepository = React.lazy(() => import('./components/builder/ResumeRepository'));
@@ -105,9 +104,9 @@ function AuthStoreSynchronizer() {
 }
 
 const PageLoadingFallback = () => (
-  <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#F7F8FA', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', color: '#071426' }}>
-    <div style={{ width: '40px', height: '40px', border: '3px solid #E1E7EF', borderTopColor: '#071426', borderRadius: '50%', animation: 'cs-spin 0.8s linear infinite' }}></div>
-    <div style={{ marginTop: '14px', fontSize: '13px', fontWeight: 600, letterSpacing: '0.04em', color: '#475569', textTransform: 'uppercase' }}>CareerSense</div>
+  <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#F7F8FA' }}>
+    <style>{`@keyframes cs-spin { to { transform: rotate(360deg); } }`}</style>
+    <div style={{ width: '36px', height: '36px', border: '3.5px solid #E2E8F0', borderTopColor: '#123B6D', borderRadius: '50%', animation: 'cs-spin 0.8s linear infinite' }} />
   </div>
 );
 
@@ -526,67 +525,55 @@ const App = () => {
 
   if (normalizedPath === '/resume-examples') {
     return (
-      <React.Suspense fallback={<PageLoadingFallback />}>
-        <ResumeExamplesIndexPage examples={RESUME_EXAMPLE_ROLES} onStart={() => startFromSeoPage()} />
-      </React.Suspense>
+      <ResumeExamplesIndexPage examples={RESUME_EXAMPLE_ROLES} onStart={() => startFromSeoPage()} />
     );
   }
 
   if (normalizedPath === '/student-resume-examples') {
     return (
-      <React.Suspense fallback={<PageLoadingFallback />}>
-        <ResumeExamplesIndexPage
-          examples={STUDENT_RESUME_EXAMPLES}
-          title="Student and Fresher Resume Examples"
-          description="Explore editable resume samples for college students, freshers, interns, final-year candidates, and students from leading Indian institutes."
-          eyebrow="Student resume library"
-          canonical="/student-resume-examples"
-          onStart={() => startFromSeoPage()}
-        />
-      </React.Suspense>
+      <ResumeExamplesIndexPage
+        examples={STUDENT_RESUME_EXAMPLES}
+        title="Student and Fresher Resume Examples"
+        description="Explore editable resume samples for college students, freshers, interns, final-year candidates, and students from leading Indian institutes."
+        eyebrow="Student resume library"
+        canonical="/student-resume-examples"
+        onStart={() => startFromSeoPage()}
+      />
     );
   }
 
   if (normalizedPath === '/resume-templates') {
     return (
-      <React.Suspense fallback={<PageLoadingFallback />}>
-        <ResumeExamplesIndexPage
-          examples={RESUME_TEMPLATE_EXAMPLES}
-          title="Resume Templates for Every Application"
-          description="Choose an editable ATS-friendly, one-page, modern, professional, or academic resume template and customize it in CareerSense."
-          eyebrow="Resume template library"
-          canonical="/resume-templates"
-          onStart={() => startFromSeoPage()}
-        />
-      </React.Suspense>
+      <ResumeExamplesIndexPage
+        examples={RESUME_TEMPLATE_EXAMPLES}
+        title="Resume Templates for Every Application"
+        description="Choose an editable ATS-friendly, one-page, modern, professional, or academic resume template and customize it in CareerSense."
+        eyebrow="Resume template library"
+        canonical="/resume-templates"
+        onStart={() => startFromSeoPage()}
+      />
     );
   }
 
   if (normalizedPath === '/resume-guides') {
     return (
-      <React.Suspense fallback={<PageLoadingFallback />}>
-        <ResumeGuidesIndexPage />
-      </React.Suspense>
+      <ResumeGuidesIndexPage />
     );
   }
 
   if (resumeGuide) {
     return (
-      <React.Suspense fallback={<PageLoadingFallback />}>
-        <ResumeGuidePage guide={resumeGuide} onStart={() => startFromSeoPage()} />
-      </React.Suspense>
+      <ResumeGuidePage guide={resumeGuide} onStart={() => startFromSeoPage()} />
     );
   }
 
   if (resumeExample) {
     return (
-      <React.Suspense fallback={<PageLoadingFallback />}>
-        <ResumeExamplePage
-          example={resumeExample}
-          onStart={() => startFromSeoPage()}
-          onUseTemplate={(templateId) => startFromSeoPage(templateId, resumeExample)}
-        />
-      </React.Suspense>
+      <ResumeExamplePage
+        example={resumeExample}
+        onStart={() => startFromSeoPage()}
+        onUseTemplate={(templateId) => startFromSeoPage(templateId, resumeExample)}
+      />
     );
   }
 
@@ -594,10 +581,12 @@ const App = () => {
 
   if (!isKnownAppPath) {
     return (
-      <React.Suspense fallback={<PageLoadingFallback />}>
-        <NotFoundPage />
-      </React.Suspense>
+      <NotFoundPage />
     );
+  }
+
+  if (!isLoaded && currentView !== 'landing' && currentView !== 'gallery') {
+    return <PageLoadingFallback />;
   }
 
   return (
@@ -618,8 +607,10 @@ const App = () => {
         />
       ) : null}
       <AuthStoreSynchronizer />
-      <React.Suspense fallback={<PageLoadingFallback />}>
+      <React.Suspense fallback={null}>
         <WelcomeTokensModal />
+      </React.Suspense>
+      <React.Suspense fallback={<PageLoadingFallback />}>
         {/* VIEW: LANDING */}
           {currentView === 'landing' && (
             <ResumeBuilderLanding

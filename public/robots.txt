@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /builder
+Disallow: /editor
+Disallow: /review
+Disallow: /upload
+Disallow: /upload-options
+Disallow: /tailor
+Disallow: /target
+Disallow: /jd-upload
+Disallow: /select
 
 Sitemap: https://resume.careersenseai.com/sitemap.xml
